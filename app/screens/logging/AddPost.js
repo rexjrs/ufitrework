@@ -10,7 +10,8 @@ import {
   ScrollView,
   Modal,
   TouchableWithoutFeedback,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -33,12 +34,30 @@ export default class FoodCard extends Component {
             loading: false,
             action: this.props.navigation.state.params.action,
             error: "",
-            isSelected: false
+            isSelected: false,
+            postid: this.props.navigation.state.params.id
         };
     }
 
     componentWillMount(){
+        this.initialEditState()
+    }
 
+    initialEditState(){
+        if(this.props.navigation.state.params.action === "edit"){
+            let imageURI = BUCKETIMAGES
+            if(this.state.cardType === "Exercise"){
+                imageURI = BUCKETEXERCISEIMAGES
+            }
+            this.setState({
+                desc: this.props.navigation.state.params.desc,
+            })
+            if(this.props.navigation.state.params.image){
+                this.setState({
+                    imageDisplay: {uri: imageURI+'/'+this.props.navigation.state.params.image}
+                })
+            }
+        }
     }
 
     back(){
@@ -53,8 +72,12 @@ export default class FoodCard extends Component {
         }).then(image => {
             this.setState({
                 imageSource: image.data,
-                imageDisplay: {uri: image.path}
+                imageDisplay: {uri: image.path},
+                visible: false
             })
+        })
+        .catch(e => {
+            this.setState({visible: false})
         });
     }
 
@@ -66,8 +89,12 @@ export default class FoodCard extends Component {
         }).then(image => {
             this.setState({
                 imageSource: image.data,
-                imageDisplay: {uri: image.path}
+                imageDisplay: {uri: image.path},
+                visible: false
             })
+        })
+        .catch(e => {
+            this.setState({visible: false})
         });
     }
 
@@ -96,9 +123,20 @@ export default class FoodCard extends Component {
             this.figureOut()
             this.setState({error: ''})
         }else{
-            this.setState({
-                error: 'Please attach either a description or an image',
-            })
+            if(this.props.navigation.state.params.action === "edit"){
+                if(this.state.imageDisplay){
+                    this.figureOut()
+                    this.setState({error: ''})
+                }else{
+                this.setState({
+                    error: 'Please attach either a description or an image',
+                })
+                }
+            }else{
+                this.setState({
+                    error: 'Please attach either a description or an image',
+                })
+            }
         }
     }
 
@@ -133,7 +171,32 @@ export default class FoodCard extends Component {
     }
 
     updatePost(){
-
+        this.setState({loadingMessage: 'Updating post...', loading: true})
+        let params = {
+            username: this.state.username,
+            description: this.state.desc,
+            postid: this.state.postid.toString(),
+            photos_to_remove: []
+        }
+        if(this.state.cardType === "Exercise"){
+            params['restDay'] = (this.state.isSelected?1:0).toString()
+        }
+        fetch(`${APIURL3}/updatepost`, {
+                method: 'POST',
+                body: JSON.stringify(params),
+                headers: HEADERPARAM3
+        })
+        .then((response) => {
+            let responseJson = JSON.parse(response._bodyInit);
+            if(responseJson.status == "ok"){
+                let id = responseJson.post.id;
+                if(this.state.imageSource){
+                    this.uploadImage(this.state.postid.toString());
+                }else{
+                    this.callback()
+                }
+            }
+        })
     }
 
     uploadImage(id){
@@ -218,10 +281,10 @@ export default class FoodCard extends Component {
                             </TouchableOpacity>
                         </View>
                         }
-                        {this.state.imageSource &&
+                        {this.state.imageDisplay &&
                             <Image source={this.state.imageDisplay} style={styles.image}/>
                         }
-                        {!this.state.imageSource &&
+                        {!this.state.imageDisplay &&
                         <TouchableOpacity onPress={()=>this.setState({visible: true})} style={[styles.image,{justifyContent: "center",alignItems: "center",backgroundColor: "#F8F8F8",borderWidth: 1,borderColor: "#CCC"}]}>
                             <Icon name="ios-camera" type="ionicon" size={30} color="#CCC" />
                         </TouchableOpacity>
@@ -296,7 +359,7 @@ const styles = StyleSheet.create({
     },
     inputDesc: {
         marginTop: 25,
-        borderBottomWidth: 1,
+        borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0,
         borderBottomColor: "#CCC"
     },
     modalTop: {
@@ -324,7 +387,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: "row",
         backgroundColor: "#1CBCD4",
-        height: 65,
+        height: (Platform.OS === 'ios') ? 65 : 55,
         alignItems: "center"
     },
     headerCells:{
@@ -332,7 +395,7 @@ const styles = StyleSheet.create({
     },
     buttons: {
         padding: 20,
-        paddingTop: 35
+        paddingTop: (Platform.OS === 'ios') ? 35 : 20,
     },
     backText: {
         color: "white",

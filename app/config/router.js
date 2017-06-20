@@ -110,6 +110,7 @@ export const Tabs = TabNavigator({
         indicatorStyle: {
             backgroundColor: "white"
         }
-    }
+    },
+    swipeEnabled: false
 }
 )

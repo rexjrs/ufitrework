@@ -25,7 +25,7 @@ export default class Progress extends Component {
         super(props);
         this.state = { 
             firstName: this.props.firstName+'!',
-            dailyMsg: "Hello, ",
+            dailyMsg: "Hello",
             imageNeeded: this.props.imageNeeded,
             profileImage: this.props.profileImage,
             progress: window.width,
@@ -83,7 +83,7 @@ export default class Progress extends Component {
                 })
             }else{
                 this.setState({
-                    dailyMsg: "Hello, ",
+                    dailyMsg: "Hello",
                     firstName: this.props.firstName+"!",
                 })
             }

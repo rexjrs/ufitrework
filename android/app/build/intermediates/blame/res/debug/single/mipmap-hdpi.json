@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher.png",
+        "source": "/Users/irexjr/Projects/ufitrework/android/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
         "merged": "/Users/irexjr/Projects/UFIT/android/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher.png",
         "source": "/Users/irexjr/Projects/UFIT/android/app/src/main/res/mipmap-hdpi/ic_launcher.png"
     }

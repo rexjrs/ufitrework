@@ -8,7 +8,8 @@ Dimensions,
 TouchableOpacity,
 Image,
 TextInput,
-ActivityIndicator
+ActivityIndicator,
+Platform
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 import moment from 'moment';
@@ -169,7 +170,9 @@ export default class Team extends Component {
     render() {
         return(
             <View style={styles.container}>
+                {Platform.OS === "ios" &&
                 <View style={styles.statusBar}></View>
+                }
                 {this.state.loading &&
                 <ActivityIndicator
                     animating={true}

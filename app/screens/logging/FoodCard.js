@@ -14,7 +14,8 @@ import {
   ListView,
   Modal,
   LayoutAnimation,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -86,7 +87,9 @@ const styles = StyleSheet.create({
         height: 1
         },
         shadowRadius: 1,
-        shadowOpacity: 0.3
+        shadowOpacity: 0.3,
+        borderWidth: (Platform.OS === 'ios') ? 0 : 0.2,
+        borderColor: "#CCC"
     },
     headerCell: {
         flexDirection: "row",

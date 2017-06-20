@@ -6,7 +6,8 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  TextInput
+  TextInput,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -32,23 +33,32 @@ export default class FoodCard extends Component {
             <View style={styles.container}>
                 <View style={styles.cell}>
                     <View style={styles.header}>
-                        {this.props.cardType === "Breakfast" &&
-                        <Image source={require('../../assets/icons/breakfast.png')} style={{width: 30, height: 30}}/>
-                        }
-                        {this.props.cardType === "Lunch" &&
-                        <Image source={require('../../assets/icons/lunch.png')} style={{width: 30, height: 30}}/>
-                        }
-                        {this.props.cardType === "Dinner" &&
-                        <Image source={require('../../assets/icons/dinner.png')} style={{width: 30, height: 30}}/>
-                        }
-                        {this.state.cardType === "Exercise" &&
-                        <Image source={require('../../assets/icons/exercise.png')} style={{width: 30, height: 30}}/>
-                        }
-                        <Text style={styles.icon}>{this.props.cardType}</Text>
+                        <View style={{flex: 0.5, flexDirection: "row",alignItems: "center"}}>
+                            {this.props.cardType === "Breakfast" &&
+                            <Image source={require('../../assets/icons/breakfast.png')} style={{width: 30, height: 30}}/>
+                            }
+                            {this.props.cardType === "Lunch" &&
+                            <Image source={require('../../assets/icons/lunch.png')} style={{width: 30, height: 30}}/>
+                            }
+                            {this.props.cardType === "Dinner" &&
+                            <Image source={require('../../assets/icons/dinner.png')} style={{width: 30, height: 30}}/>
+                            }
+                            {this.state.cardType === "Exercise" &&
+                            <Image source={require('../../assets/icons/exercise.png')} style={{width: 30, height: 30}}/>
+                            }
+                            <Text style={styles.icon}>{this.props.cardType}</Text>
+                        </View>
+                        <View style={{flex: 0.5, alignItems: "flex-end"}}>
+                            <TouchableOpacity onPress={()=>this.props.focusPost(this.props.id)} style={{paddingHorizontal: 10,paddingTop: 10}}>
+                             <Icon name="ios-more" type="ionicon" size={35} color="#CCC"/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     {this.props.cardType !== "Exercise" &&
                     <View>
+                        {this.props.description !== "" &&
                         <Text style={styles.desc}>{this.props.description}</Text>
+                        }
                         <CacheableImage source={{ uri: imageURI+'/'+this.props.image}} style={styles.image}/>
                     </View>
                     }
@@ -91,7 +101,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         width: window.width * 0.95,
         paddingHorizontal: 10,
-        paddingVertical: 10
+        paddingVertical: 10,
+        borderWidth: (Platform.OS === 'ios') ? 0 : 0.2,
+        borderColor: "#CCC"
     },
     header: {
         flexDirection: "row",

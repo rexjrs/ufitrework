@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  PanResponder
+  PanResponder,
+  Platform
 } from 'react-native';
 import moment from 'moment';
 
@@ -169,9 +170,9 @@ var window = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         width: window.width,
-        height: 75,
+        height: (Platform.OS === 'ios') ? 75 : 65,
         backgroundColor: "#1CBCD4",
-        paddingTop: 30
+        paddingTop: (Platform.OS === 'ios') ? 30 : 15,
     },
     containerRow: {
         flexDirection: "row"

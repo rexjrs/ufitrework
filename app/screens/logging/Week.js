@@ -22,7 +22,7 @@ export default class FoodCard extends Component {
     componentWillMount(){
         let date = new Date()
         this.getDays(date)
-        this.selectedDay(moment(date).format('ddd'))
+        this.selectedDay(moment(date).format('ddd'),date)
 
         this._panResponder = PanResponder.create({
             onMoveShouldSetResponderCapture: () => true,
@@ -56,22 +56,31 @@ export default class FoodCard extends Component {
     }
 
     changeWeek(period){
+        let week;
         if(period){
-            let week = moment(this.state.currentWeek).add('1','week')
+            week = moment(this.state.currentWeek).add('1','week')
             this.getDays(week)
         }else{
-            let week = moment(this.state.currentWeek).subtract('1','week')    
+            week = moment(this.state.currentWeek).subtract('1','week')    
             this.getDays(week)
         }
         this.setState({
             MonColor: "white",TueColor: "white",WedColor: "white",ThuColor: "white",FriColor: "white",SatColor: "white",SunColor: "white",
             MonCircleColor: "transparent",TueCircleColor: "transparent",WedCircleColor: "transparent",ThuCircleColor: "transparent",FriCircleColor: "transparent",SatCircleColor: "transparent",SunCircleColor: "transparent",
         })
+        if(moment(week).startOf('isoweek').format('YYYY-MM-DD') == moment(this.state.realSelectedDay).startOf('isoweek').format('YYYY-MM-DD')){
+            let day = moment(this.state.realSelectedDay).format('ddd')
+            this.setState({
+                [day+'Color']: "#1CBCD4",
+                [day+'CircleColor']: "white"
+            })
+        }
     }
 
-    selectedDay(value){
+    selectedDay(value,real){
         this.setState({
             selectedDay: value,
+            realSelectedDay: real,
             MonColor: "white",TueColor: "white",WedColor: "white",ThuColor: "white",FriColor: "white",SatColor: "white",SunColor: "white",
             MonCircleColor: "transparent",TueCircleColor: "transparent",WedCircleColor: "transparent",ThuCircleColor: "transparent",FriCircleColor: "transparent",SatCircleColor: "transparent",SunCircleColor: "transparent",
             [value+'Color']: "#1CBCD4",
@@ -107,43 +116,43 @@ export default class FoodCard extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.containerRow} {...this._panResponder.panHandlers}> 
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.monday);this.props.fetchDay(this.state.mondayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.monday,this.state.mondayReal);this.props.fetchDay(this.state.mondayReal)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.monday}</Text>
                         <View style={{backgroundColor: this.state.MonCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.MonColor}]}>{this.state.mondayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.tuesday);this.props.fetchDay(this.state.tuesdayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.tuesday,this.state.tuesdayReal);this.props.fetchDay(this.state.tuesdayReal)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.tuesday}</Text>
                         <View style={{backgroundColor: this.state.TueCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.TueColor}]}>{this.state.tuesdayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.wednesday);this.props.fetchDay(this.state.wednesdayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.wednesday,this.state.wednesdayReal);this.props.fetchDay(this.state.wednesdayReal)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.wednesday}</Text>
                         <View style={{backgroundColor: this.state.WedCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.WedColor}]}>{this.state.wednesdayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.thursday);this.props.fetchDay(this.state.thursdayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.thursday,this.state.thursdayReal);this.props.fetchDay(this.state.thursdayReal)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.thursday}</Text>
                         <View style={{backgroundColor: this.state.ThuCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.ThuColor}]}>{this.state.thursdayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.friday);this.props.fetchDay(this.state.fridayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.friday,this.state.fridayReal);this.props.fetchDay(this.state.fridayReal)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.friday}</Text>
                         <View style={{backgroundColor: this.state.FriCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.FriColor}]}>{this.state.fridayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.saturday);this.props.fetchDay(this.state.saturdayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.saturday,this.state.saturdayReal);this.props.fetchDay(this.state.saturdayReal)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.saturday}</Text>
                         <View style={{backgroundColor: this.state.SatCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.SatColor}]}>{this.state.saturdayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.sunday);this.props.fetchDay(this.state.sundayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.sunday,this.state.sundayReal);this.props.fetchDay(this.state.sundayReal)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.sunday}</Text>
                         <View style={{backgroundColor: this.state.SunCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.SunColor}]}>{this.state.sundayDD}</Text>

@@ -29,8 +29,7 @@ export default class FoodCard extends Component {
     }
 
     componentWillMount(){
-        console.log('this is screen props')
-        console.log(this.props.navigation)
+
     }
 
     componentDidMount(){
@@ -40,7 +39,7 @@ export default class FoodCard extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <TouchableWithoutFeedback onPress={()=>this.props.navigation.navigate('AddPost')} style={styles.cell}>
+                <TouchableWithoutFeedback onPress={()=>this.props.navigation.navigate('AddPost',{ cardType: this.props.cardType, icon: this.props.icon, date: this.props.stateDate, action: 'add', screenProps: this.props.screenProps, fetchDay: this.props.fetchDay})} style={styles.cell}>
                     <View style={styles.cellContainer}>
                         <View style={styles.headerCell}>
                             {this.state.icon === "breakfast" &&

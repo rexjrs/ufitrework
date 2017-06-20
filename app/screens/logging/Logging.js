@@ -29,7 +29,8 @@ export default class Logging extends Component {
             today: new Date(),
             completedCount: 0,
             dayHistory: [],
-            loading: true
+            loading: true,
+            stateDate: new Date()
         };
     }
 
@@ -37,7 +38,8 @@ export default class Logging extends Component {
         this.fetchDay(moment(this.state.today).format())
     }
 
-    fetchDay(date){
+    fetchDay(date,force){
+        date = moment(date).format('YYYY-MM-DD')
         this.setState({
             presets: [
                 {type: "Breakfast",icon: "breakfast",enabled: true},
@@ -47,22 +49,25 @@ export default class Logging extends Component {
             ],
             completedCards: [],
             completedCount: 0,
-            loading: true
+            loading: true,
+            stateDate: moment(date).format('YYYY-MM-DD')
         })
-        date = moment(date).format('YYYY-MM-DD')
         let found = false
-        for(var i in this.state.dayHistory){
-            if(this.state.dayHistory[i].date === date){
-                found = true
-                this.setState({
-                    completedCards: this.state.dayHistory[i].data,
-                    presets: this.state.dayHistory[i].presets,
-                    loading: false
-                })
+        if(!force){
+            for(var i in this.state.dayHistory){
+                if(this.state.dayHistory[i].date === date){
+                    found = true
+                    this.setState({
+                        completedCards: this.state.dayHistory[i].data,
+                        presets: this.state.dayHistory[i].presets,
+                        loading: false,
+                        completedCount: this.state.dayHistory[i].data.length
+                    })
+                }
             }
         }
         if(!found){
-            fetch(`${APIURL3}/fetchdailyresources3?username=thomc&date=${date}`, {
+            fetch(`${APIURL3}/fetchdailyresources3?username=${this.state.username}&date=${date}`, {
                 method: 'GET',
                 headers: HEADERPARAM3
             })
@@ -129,10 +134,26 @@ export default class Logging extends Component {
                             completedCount: this.state.completedCount+1
                         })
                     }
-                    if(responseJson.result.exercises){
+                    if(responseJson.result.exercises.length>0){
+                        let exercise = responseJson.result.exercises
+                        console.log(exercise)
+                        let cardTempArray = this.state.completedCards
+                        for(var i in exercise){
+                            cardTempArray.push({
+                                cardType: "Exercise",
+                                date: date,
+                                description: exercise[i].exercise_desc,
+                                image: exercise[i].image.image_name,
+                                restDay: exercise[i].rest_day
+                            })
+                        }
                         let tempArray = this.state.presets
                         tempArray[3].enabled = false
-                        this.setState({presets: tempArray})
+                        this.setState({
+                            presets: tempArray,
+                            completedCards: cardTempArray,
+                            completedCount: this.state.completedCount+1
+                        })
                     }
                     setTimeout(() => {
                         this.setState({
@@ -142,7 +163,12 @@ export default class Logging extends Component {
                         let found = false
                         for(var i in tempArray){
                             if(tempArray[i].date === date){
-                                found = true
+                                if(force){
+                                    tempArray.splice(i,1)
+                                    found = false
+                                }else{
+                                    found = true
+                                }
                             }
                         }
                         if(!found){
@@ -165,7 +191,7 @@ export default class Logging extends Component {
         var FoodCards =  this.state.presets.map((b,i) => {
             return (
                 b.enabled &&
-                <FoodCard navigation={this.props.navigation} key={i} cardType={b.type} date={b.date} icon={b.icon}/>
+                <FoodCard navigation={this.props.navigation} screenProps={this.props.screenProps} fetchDay={this.fetchDay.bind(this)} key={i} cardType={b.type} date={b.date} icon={b.icon} stateDate={this.state.stateDate}/>
             )
         });
         var CompletedCards =  this.state.completedCards.map((b,i) => {
@@ -174,18 +200,20 @@ export default class Logging extends Component {
             )
         });
         return(
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <Week fetchDay={this.fetchDay.bind(this)}/>
-                <Progress screenProps={this.props.screenProps} completedCount={this.state.completedCount}/>
-                { FoodCards }
-                <View style={styles.completed}>
-                    <Text style={styles.completedText}>Completed Activities</Text>
-                </View>
-                {!this.state.loading &&
-                    CompletedCards 
-                }
-                <View style={styles.bottomPadding}></View>
-            </ScrollView>
+                <ScrollView>
+                    <Progress screenProps={this.props.screenProps} completedCount={this.state.completedCount}/>
+                    { FoodCards }
+                    <View style={styles.completed}>
+                        <Text style={styles.completedText}>Completed Activities</Text>
+                    </View>
+                    {!this.state.loading &&
+                        CompletedCards 
+                    }
+                    <View style={styles.bottomPadding}></View>
+                </ScrollView>
+            </View>
         )
     }
 }

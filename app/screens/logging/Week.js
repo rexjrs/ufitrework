@@ -6,7 +6,8 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  TextInput
+  TextInput,
+  PanResponder
 } from 'react-native';
 import moment from 'moment';
 
@@ -22,6 +23,50 @@ export default class FoodCard extends Component {
         let date = new Date()
         this.getDays(date)
         this.selectedDay(moment(date).format('ddd'))
+
+        this._panResponder = PanResponder.create({
+            onMoveShouldSetResponderCapture: () => true,
+            onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+                return Math.abs(gestureState.dx) > 5;
+            },
+            onPanResponderGrant: (evt, gestureState) => {
+                let posStart = evt.nativeEvent.pageX;
+                pStart = posStart;
+            },
+            onPanResponderMove: (evt) => {
+                let posMove = evt.nativeEvent.pageX;
+            },
+            onPanResponderRelease: (evt, gestureState) => {
+                let posEnd = evt.nativeEvent.pageX;
+                pEnd = posEnd;
+                if(gestureState.dx > 0 && gestureState.dx < 50){
+                }else if(gestureState.dx > -50 && gestureState.dx < 0){
+                }else{
+                    if(pStart < pEnd){
+                    this.changeWeek(false)
+                }else if(pStart > pEnd){
+                    this.changeWeek(true)
+                }  
+            }
+        }
+
+
+        });
+
+    }
+
+    changeWeek(period){
+        if(period){
+            let week = moment(this.state.currentWeek).add('1','week')
+            this.getDays(week)
+        }else{
+            let week = moment(this.state.currentWeek).subtract('1','week')    
+            this.getDays(week)
+        }
+        this.setState({
+            MonColor: "white",TueColor: "white",WedColor: "white",ThuColor: "white",FriColor: "white",SatColor: "white",SunColor: "white",
+            MonCircleColor: "transparent",TueCircleColor: "transparent",WedCircleColor: "transparent",ThuCircleColor: "transparent",FriCircleColor: "transparent",SatCircleColor: "transparent",SunCircleColor: "transparent",
+        })
     }
 
     selectedDay(value){
@@ -38,9 +83,17 @@ export default class FoodCard extends Component {
         let monday = moment().startOf('isoweek')
         if(value){
             monday = moment(value).startOf('isoweek')
+            this.setState({
+                currentWeek: moment(value).startOf('isoweek'),
+                monday: moment(value).startOf('isoweek').format('ddd'), mondayDD: moment(value).startOf('isoweek').format('DD'), mondayReal: moment(value).startOf('isoweek')
+            })
+        }else{
+            this.setState({
+                currentWeek: moment().startOf('isoweek'),
+                monday: moment().startOf('isoweek').format('ddd'), mondayDD: moment().startOf('isoweek').format('DD'), mondayReal: moment().startOf('isoweek')
+            })
         }
         this.setState({
-            monday: moment().startOf('isoweek').format('ddd'), mondayDD: moment().startOf('isoweek').format('DD'), mondayReal: moment().startOf('isoweek'),
             tuesday: moment(monday).add(1,'days').format('ddd'), tuesdayDD: moment(monday).add(1,'days').format('DD'), tuesdayReal: moment(monday).add(1,'days'),
             wednesday: moment(monday).add(2,'days').format('ddd'), wednesdayDD: moment(monday).add(2,'days').format('DD'), wednesdayReal: moment(monday).add(2,'days'),
             thursday: moment(monday).add(3,'days').format('ddd'), thursdayDD: moment(monday).add(3,'days').format('DD'), thursdayReal: moment(monday).add(3,'days'),
@@ -53,7 +106,7 @@ export default class FoodCard extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.containerRow}> 
+                <View style={styles.containerRow} {...this._panResponder.panHandlers}> 
                     <TouchableOpacity onPress={()=>{this.selectedDay(this.state.monday);this.props.fetchDay(this.state.mondayReal)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.monday}</Text>
                         <View style={{backgroundColor: this.state.MonCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>

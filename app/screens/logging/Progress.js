@@ -106,7 +106,7 @@ export default class Progress extends Component {
                     {!this.state.imageNeeded &&
                     <View style={{height: 65, width: 65, borderWidth: 3, borderColor: "white", borderRadius: 200, justifyContent: "center", alignItems: "center", backgroundColor: "#CCC"}}>
                         {!this.state.loadingImage &&
-                        <CacheableImage style={styles.profileImage} source={{uri: BUCKETIMAGES+'/'+this.props.screenProps.profileImage}}/>
+                        <Image style={styles.profileImage} source={{uri: BUCKETIMAGES+'/'+this.props.screenProps.profileImage}}/>
                         }
                     </View>
                     }

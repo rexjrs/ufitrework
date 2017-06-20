@@ -15,6 +15,7 @@
     "react-native-dismiss-keyboard": "^1.0.0",
     "react-native-elements": "^0.13.0",
     "react-native-fs": "^2.3.3",
+    "react-native-image-crop-picker": "^0.13.1",
     "react-native-vector-icons": "^4.2.0",
     "react-navigation": "^1.0.0-beta.11",
     "url-parse": "^1.1.9"

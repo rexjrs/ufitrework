@@ -24,15 +24,39 @@ export default class FoodCard extends Component {
     }
 
     render() {
+        let imageURI = BUCKETIMAGES
+        if(this.props.cardType === "Exercise"){
+            imageURI = BUCKETEXERCISEIMAGES
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.cell}>
                     <View style={styles.header}>
-                        <Icon name="ios-beer-outline" size={30} color="#808184" />
+                        {this.props.cardType === "Breakfast" &&
+                        <Image source={require('../../assets/icons/breakfast.png')} style={{width: 30, height: 30}}/>
+                        }
+                        {this.props.cardType === "Lunch" &&
+                        <Image source={require('../../assets/icons/lunch.png')} style={{width: 30, height: 30}}/>
+                        }
+                        {this.props.cardType === "Dinner" &&
+                        <Image source={require('../../assets/icons/dinner.png')} style={{width: 30, height: 30}}/>
+                        }
+                        {this.state.cardType === "Exercise" &&
+                        <Image source={require('../../assets/icons/exercise.png')} style={{width: 30, height: 30}}/>
+                        }
                         <Text style={styles.icon}>{this.props.cardType}</Text>
                     </View>
-                    <Text style={styles.desc}>{this.props.description}</Text>
-                    <CacheableImage source={{ uri: BUCKETIMAGES+'/'+this.props.image}} style={styles.image}/>
+                    {this.props.cardType !== "Exercise" &&
+                    <View>
+                        <Text style={styles.desc}>{this.props.description}</Text>
+                        <CacheableImage source={{ uri: imageURI+'/'+this.props.image}} style={styles.image}/>
+                    </View>
+                    }
+                    {this.props.cardType === "Exercise" &&
+                    <View style={styles.restDay}>
+                        <Text>Today is a rest day</Text>
+                    </View>
+                    }
                 </View>
             </View>
         );
@@ -50,6 +74,11 @@ const styles = StyleSheet.create({
     image: {
         width: window.width*0.9,
         height: 170
+    },
+    restDay: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20
     },
     cell: {
         marginTop: 7,

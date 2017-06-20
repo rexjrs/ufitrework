@@ -34,7 +34,7 @@ export default class Team extends Component {
 
     getFeed(){
         this.setState({ dataSource: ds.cloneWithRows([]), dataSourceClean: [], loadingData: true }) //reset datastore
-        fetch(`${APIURL3}/fetchfeeds?username=thomc`, {
+        fetch(`https://wbrbqg1s8f.execute-api.ap-southeast-1.amazonaws.com/devv2/fetchfeeds?username=thomc`, {
                 method: 'GET',
                 headers: HEADERPARAM3
         })
@@ -99,6 +99,9 @@ export default class Team extends Component {
                 }
             }
         })
+        .catch((error) => {
+            console.error(error);
+        });
     }
 
     _renderRow(value){

@@ -18,6 +18,6 @@ HEADERPARAM2 = {
                 };
 HEADERPARAM3 = {
                     "x-api-key" : "NFeUWGieM17AIJTnFqMUK94RpAoOgDZdhG8WzaVe",
-                    "Content-Type" : "application/json;charset=utf-8",
+                    "Content-Type" : "application/json",
                     "url" : "https://wbrbqg1s8f.execute-api.ap-southeast-1.amazonaws.com"
                 };

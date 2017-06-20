@@ -17,29 +17,34 @@ class Index extends Component {
             addChallenge: false,
             username: '',
             firstName: '',
-            profileImage: ''
+            profileImage: '',
+            challengeID: ''
         };
     }
 
     componentWillMount(){
-        AsyncStorage.multiGet(['username','firstName','profileImage'], (err, keys) => {
+        this.getData()
+    }
+
+    getData(){
+        AsyncStorage.multiGet(['username','firstName','profileImage','challenge'], (err, keys) => {
             if(keys[0][1] == null){
 
             }else{
+                console.log(keys[3][1])
                 this.setState({
-                    loggedIn: true,
                     username: keys[0][1],
                     firstName: keys[1][1],
-                    profileImage: keys[2][1]
+                    profileImage: keys[2][1],
+                    challengeID: keys[3][1],
+                    loggedIn: true,
                 })
             }
         })
     }
 
     loggedIn(){
-        this.setState({
-            loggedIn: true
-        })
+        this.getData()
     }
 
     logout(){
@@ -59,6 +64,7 @@ class Index extends Component {
                         username: this.state.username,
                         firstName: this.state.firstName,
                         profileImage: this.state.profileImage,
+                        challengeID: this.state.challengeID,
                         logout: this.logout.bind(this)
                     }}/>
                 }

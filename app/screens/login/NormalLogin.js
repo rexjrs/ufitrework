@@ -56,18 +56,18 @@ export default class NormalLogin extends Component {
             .then((response) => {
                 let responseJson = JSON.parse(response._bodyInit);
                 if(responseJson.status == "ok"){
+                    AsyncStorage.setItem('loginType','normal');
+                    AsyncStorage.setItem('username',responseJson.result.username);
+                    AsyncStorage.setItem('BA', responseJson.result.BA);
+                    AsyncStorage.setItem('challenge', responseJson.result.coach_challenge_id);
+                    AsyncStorage.setItem('firstName', responseJson.result.first_name);
+                    AsyncStorage.setItem('lastName', responseJson.result.last_name);
+                    AsyncStorage.setItem('email', responseJson.result.email);
+                    AsyncStorage.setItem('birthday', responseJson.result.birthday);
+                    AsyncStorage.setItem('vision', responseJson.result.vision);
+                    AsyncStorage.setItem('gender', responseJson.result.gender);
+                    AsyncStorage.setItem('profileImage', responseJson.result.profile_picture);
                     setTimeout(() => {
-                        AsyncStorage.setItem('loginType','normal');
-                        AsyncStorage.setItem('username',responseJson.result.username);
-                        AsyncStorage.setItem('BA', responseJson.result.BA);
-                        AsyncStorage.setItem('challenge', responseJson.result.coach_challenge_id);
-                        AsyncStorage.setItem('firstName', responseJson.result.first_name);
-                        AsyncStorage.setItem('lastName', responseJson.result.last_name);
-                        AsyncStorage.setItem('email', responseJson.result.email);
-                        AsyncStorage.setItem('birthday', responseJson.result.birthday);
-                        AsyncStorage.setItem('vision', responseJson.result.vision);
-                        AsyncStorage.setItem('gender', responseJson.result.gender);
-                        AsyncStorage.setItem('profileImage', responseJson.result.profile_picture);
                         this.setState({
                             loading: false,
                             loginBtn: true
@@ -81,13 +81,11 @@ export default class NormalLogin extends Component {
                         }
                     }, 2000)
                 }else{
-                    setTimeout(() => {
-                        this.setState({
-                            loading: false,
-                            loginBtn: true,
-                            loginFailed: true
-                        });
-                    }, 2000)
+                    this.setState({
+                        loading: false,
+                        loginBtn: true,
+                        loginFailed: true
+                    });
                 }
             })
         }

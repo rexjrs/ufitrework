@@ -18,7 +18,9 @@ class Index extends Component {
             username: '',
             firstName: '',
             profileImage: '',
-            challengeID: ''
+            challengeID: '',
+            needChallenge: null,
+            products: []
         };
     }
 
@@ -26,21 +28,58 @@ class Index extends Component {
         this.getData()
     }
 
+    getProducts(){
+        fetch(`${APIURL2}/getproducts`, {
+                method: 'GET',
+                headers: HEADERPARAM3
+        })
+        .then((response) => {
+            let responseJson = JSON.parse(response._bodyInit);
+            let result = responseJson.result
+            let tempArray = []
+            for(var i in result){
+                let dosage = result[i].dosage
+                if(result[i].dosage == ''){
+                    dosage = 1
+                }
+                tempArray.push({
+                    id: result[i].product_id,
+                    name: result[i].product_name,
+                    dosage: dosage,
+                    selected: false
+                })
+            }
+            this.setState({
+                products: tempArray
+            },this.logIn)
+            AsyncStorage.setItem('selectedProducts',JSON.stringify(tempArray))
+        })
+    }
+
     getData(){
-        AsyncStorage.multiGet(['username','firstName','profileImage','challenge'], (err, keys) => {
+        AsyncStorage.multiGet(['username','firstName','profileImage','challenge','selectedProducts'], (err, keys) => {
             if(keys[0][1] == null){
 
             }else{
-                console.log(keys[3][1])
                 this.setState({
                     username: keys[0][1],
                     firstName: keys[1][1],
                     profileImage: keys[2][1],
                     challengeID: keys[3][1],
-                    loggedIn: true,
                 })
+                if(keys[4][1] == null){
+                    this.getProducts()
+                }else{
+                    this.setState({
+                        products: JSON.parse(keys[4][1])
+                    },this.logIn)
+                }
             }
         })
+    }
+
+    logIn(){
+        this.setState({loggedIn: true})
     }
 
     loggedIn(){
@@ -65,6 +104,7 @@ class Index extends Component {
                         firstName: this.state.firstName,
                         profileImage: this.state.profileImage,
                         challengeID: this.state.challengeID,
+                        products: this.state.products,
                         logout: this.logout.bind(this)
                     }}/>
                 }

@@ -28,6 +28,9 @@ export default class FoodCard extends Component {
         let imageURI = BUCKETIMAGES
         if(this.props.cardType === "Exercise"){
             imageURI = BUCKETEXERCISEIMAGES
+            if(this.props.image == '2017061815314500000719.jpg'){
+                imageURI = BUCKETIMAGES
+            }
         }
         return (
             <View style={styles.container}>
@@ -54,15 +57,15 @@ export default class FoodCard extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {this.props.cardType !== "Exercise" &&
                     <View>
-                        {this.props.description !== "" &&
+                        {this.props.description !== "" && this.props.restDay != 1 &&
                         <Text style={styles.desc}>{this.props.description}</Text>
                         }
+                        {this.props.restDay != 1 &&
                         <CacheableImage source={{ uri: imageURI+'/'+this.props.image}} style={styles.image}/>
+                        }
                     </View>
-                    }
-                    {this.props.cardType === "Exercise" &&
+                    {this.props.cardType === "Exercise" && this.props.restDay == 1 &&
                     <View style={styles.restDay}>
                         <Text>Today is a rest day</Text>
                     </View>

@@ -1,4 +1,7 @@
 import React from 'react'
+import {
+Platform
+} from 'react-native'
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { Icon } from 'react-native-elements'
 
@@ -11,6 +14,7 @@ import Logging from '../screens/logging/Logging'
 import Team from '../screens/team/Team'
 
 import AddPost from '../screens/logging/AddPost'
+import Product from '../screens/more/Product'
 
 // Login Page Stack
 export const LoginNav = StackNavigator({
@@ -66,7 +70,13 @@ export const MoreStack = StackNavigator({
         navigationOptions: {
             header: false
         }
-    }  
+    },
+    Product: {
+        screen: Product,
+        navigationOptions: {
+            header: false
+        }
+    }
 })
 
 // Tab Bar Main Container
@@ -77,12 +87,12 @@ export const Tabs = TabNavigator({
             tabBarIcon: ({tintColor}) => (<Icon name="ios-home" type="ionicon" size={27} color={tintColor}/>)
         }
     },
-    Journey: {
-        screen: JourneyStack,
-        navigationOptions: {
-            tabBarIcon: ({tintColor}) => (<Icon name="ios-stats" type="ionicon" size={27} color={tintColor}/>)
-        }
-    },
+    // Journey: {
+    //     screen: JourneyStack,
+    //     navigationOptions: {
+    //         tabBarIcon: ({tintColor}) => (<Icon name="ios-stats" type="ionicon" size={27} color={tintColor}/>)
+    //     }
+    // },
     Logging: {
         screen: LoggingStack,
         navigationOptions: {
@@ -101,7 +111,9 @@ export const Tabs = TabNavigator({
             backgroundColor: 'white',
             height: 50,
             padding: 0,
-            margin: 0
+            margin: 0,
+            borderBottomWidth: (Platform.OS === 'ios') ? 0 : 0.2,
+            borderBottomColor: "#CCC"
         },
         showIcon: true,
         showLabel: false,

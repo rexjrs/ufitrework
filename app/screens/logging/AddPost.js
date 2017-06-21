@@ -11,7 +11,8 @@ import {
   Modal,
   TouchableWithoutFeedback,
   ActivityIndicator,
-  Platform
+  Platform,
+  Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -70,6 +71,7 @@ export default class FoodCard extends Component {
             compressImageMaxWidth: 2000,
             includeBase64: true
         }).then(image => {
+            console.log(image.path)
             this.setState({
                 imageSource: image.data,
                 imageDisplay: {uri: image.path},
@@ -77,6 +79,7 @@ export default class FoodCard extends Component {
             })
         })
         .catch(e => {
+            console.log(e)
             this.setState({visible: false})
         });
     }
@@ -119,6 +122,9 @@ export default class FoodCard extends Component {
         if(this.state.desc !== ""){
             count = count+1
         }
+        if(this.state.isSelected){
+            count = count+1
+        }
         if(count > 0){
             this.figureOut()
             this.setState({error: ''})
@@ -159,6 +165,7 @@ export default class FoodCard extends Component {
         })
         .then((response) => {
             let responseJson = JSON.parse(response._bodyInit);
+            console.log(responseJson)
             if(responseJson.status == "ok"){
                 let id = responseJson.post.id;
                 if(this.state.imageSource){
@@ -229,6 +236,22 @@ export default class FoodCard extends Component {
         }
     }
 
+    openMenu(){
+        if(Platform.OS === "ios"){
+            this.setState({visible: true})
+        }else{
+            Alert.alert(
+                'Image',
+                'Please select an image',
+                [
+                    {text: 'Cancel', onPress: () => console.log('cancel')},
+                    {text: 'Gallery', onPress: () => this.openGallery()},
+                    {text: 'Camera', onPress: () => this.openCamera()},
+                ]
+            )
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -285,7 +308,7 @@ export default class FoodCard extends Component {
                             <Image source={this.state.imageDisplay} style={styles.image}/>
                         }
                         {!this.state.imageDisplay &&
-                        <TouchableOpacity onPress={()=>this.setState({visible: true})} style={[styles.image,{justifyContent: "center",alignItems: "center",backgroundColor: "#F8F8F8",borderWidth: 1,borderColor: "#CCC"}]}>
+                        <TouchableOpacity onPress={()=>this.openMenu()} style={[styles.image,{justifyContent: "center",alignItems: "center",backgroundColor: "#F8F8F8",borderWidth: 1,borderColor: "#CCC"}]}>
                             <Icon name="ios-camera" type="ionicon" size={30} color="#CCC" />
                         </TouchableOpacity>
                         }
@@ -309,6 +332,7 @@ export default class FoodCard extends Component {
                     visible={this.state.visible}
                     style={styles.modal}
                     transparent={true}
+                    onRequestClose={()=>this.setState({visible: false})}
                 >
                     <TouchableOpacity style={styles.modalTop} onPress={()=>this.setState({visible: false})}>
 

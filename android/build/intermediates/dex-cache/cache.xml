@@ -210,21 +210,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars/libs/internal_impl-24.2.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.1"
-        sha1="045be695d968dd707691cc55d23746dbf8cf569a">
-        <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_b0a5724c8cbb481b291dadf34d2c3377cb449a8d.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.facebook.fbui.textlayoutbuilder/textlayoutbuilder/1.0.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.1"
         sha1="f90b593491e4044903f0bbf68dc3fa2790b151b9">
         <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/com.facebook.fbui.textlayoutbuilder-textlayoutbuilder-1.0.0_3029f0ce6f923aaf2add62f8a554dc648392ec54.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.0/jars/libs/internal_impl-24.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="045be695d968dd707691cc55d23746dbf8cf569a">
+        <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/internal_impl-24.2.0_b0a5724c8cbb481b291dadf34d2c3377cb449a8d.jar" />
     </item>
     <item
         is-multidex="false"

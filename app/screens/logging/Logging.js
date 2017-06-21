@@ -37,12 +37,18 @@ export default class Logging extends Component {
             loading: true,
             stateDate: new Date(),
             visible: false,
-            selectedPost: null
+            selectedPost: null,
+            products: []
         };
     }
 
     componentWillMount(){
         this.fetchDay(moment(this.state.today).format())
+        this.getProducts()
+    }
+
+    getProducts(){
+        console.log(this.props.screenProps)
     }
 
     fetchDay(date,force){
@@ -149,11 +155,17 @@ export default class Logging extends Component {
                         let exercise = responseJson.result.exercises
                         let cardTempArray = this.state.completedCards
                         for(var i in exercise){
+                            let image
+                            if(exercise[i].image){
+                                image = exercise[i].image.image_name
+                            }else{
+                                image = '2017061815314500000719.jpg'
+                            }
                             cardTempArray.push({
                                 cardType: "Exercise",
                                 date: date,
                                 description: exercise[i].exercise_desc,
-                                image: exercise[i].image.image_name,
+                                image: image,
                                 restDay: exercise[i].rest_day,
                                 id: exercise[i].exercise_id
                             })
@@ -205,8 +217,8 @@ export default class Logging extends Component {
             })
         }else{
             Alert.alert(
-                'Delete',
-                'Are you sure you want to delete supplement?',
+                'Post',
+                'What would you like to do to your post?',
                 [
                     {text: 'Cancel', onPress: () => console.log('cancel')},
                     {text: 'Edit', onPress: () => this.editPost(this.state.selectedPost)},
@@ -253,7 +265,7 @@ export default class Logging extends Component {
         });
         var CompletedCards =  this.state.completedCards.map((b,i) => {
             return (
-                <CompletedCard key={i} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image}/>
+                <CompletedCard key={i} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image} restDay={b.restDay}/>
             )
         });
         return(
@@ -283,6 +295,7 @@ export default class Logging extends Component {
                     visible={this.state.visible}
                     style={styles.modal}
                     transparent={true}
+                    onRequestClose={()=>this.setState({visible: false})}
                 >
                     <TouchableOpacity style={styles.modalTop} onPress={()=>this.setState({visible: false})}>
                     </TouchableOpacity>

@@ -9,7 +9,8 @@ Dimensions,
 KeyboardAvoidingView,
 TextInput,
 AsyncStorage,
-ActivityIndicator
+ActivityIndicator,
+Platform
 } from 'react-native';
 import dismissKeyboard from 'react-native-dismiss-keyboard';
 
@@ -68,10 +69,6 @@ export default class NormalLogin extends Component {
                     AsyncStorage.setItem('gender', responseJson.result.gender);
                     AsyncStorage.setItem('profileImage', responseJson.result.profile_picture);
                     setTimeout(() => {
-                        this.setState({
-                            loading: false,
-                            loginBtn: true
-                        })
                         if(!responseJson.result.coach_challenge_id){
                             this.props.navigator.push({
                                 id: 'addchallenge'
@@ -227,7 +224,7 @@ const styles = StyleSheet.create({
     },
     inputDetail: {
         padding: 0,
-        borderBottomWidth: 1,
+        borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0,
         borderColor: "white",
         color: "white",
         height: 25

@@ -6,7 +6,8 @@ View,
 Dimensions,
 TouchableOpacity,
 StatusBar,
-AsyncStorage
+AsyncStorage,
+Platform
 } from 'react-native';
 
 export default class More extends Component {
@@ -22,6 +23,7 @@ export default class More extends Component {
         AsyncStorage.removeItem('vision');
         AsyncStorage.removeItem('gender');
         AsyncStorage.removeItem('profileImage');
+        AsyncStorage.removeItem('selectedProducts');
 
         this.props.screenProps.logout()
     }
@@ -38,7 +40,7 @@ export default class More extends Component {
                 <View style={styles.header}>
                     <Text style={styles.headerText}>Profile</Text>
                 </View>
-                <TouchableOpacity style={styles.cellContainer}>
+                {/*<TouchableOpacity style={styles.cellContainer}>
                     <Text style={styles.cellText}>Edit Profile</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cellContainer}>
@@ -46,8 +48,8 @@ export default class More extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cellContainer}>
                     <Text style={styles.cellText}>Add Coach & Friends</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cellContainer}>
+                </TouchableOpacity>*/}
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate('Product',{products: this.props.screenProps.products})} style={styles.cellContainer}>
                     <Text style={styles.cellText}>Edit Goals</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cellContainer}>
@@ -69,10 +71,10 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     navBar: {
-        height: 60,
+        height: (Platform.OS === 'ios') ? 60 : 50,
         backgroundColor: "#1CBCD4",
         alignItems: "center",
-        paddingTop: 30,
+        paddingTop: (Platform.OS === 'ios') ? 30 : 15,
         marginBottom: 20
     },
     navBarText: {

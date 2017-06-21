@@ -29,13 +29,12 @@ export default class Team extends Component {
     componentWillMount(){
         this.setState({
             username: this.props.screenProps.username
-        })
-        this.getFeed()
+        },this.getFeed)
     }
 
     getFeed(){
         this.setState({ dataSource: ds.cloneWithRows([]), dataSourceClean: [], loadingData: true }) //reset datastore
-        fetch(`https://wbrbqg1s8f.execute-api.ap-southeast-1.amazonaws.com/devv2/fetchfeeds?username=thomc`, {
+        fetch(`${APIURL3}/fetchfeeds?username=${this.state.username}`, {
                 method: 'GET',
                 headers: HEADERPARAM3
         })
@@ -110,10 +109,10 @@ export default class Team extends Component {
         if(value.data.length == 1){
             tempWidth = window.width*0.970
         }
-        var Images =  value.data.map(b => {
+        var Images =  value.data.map((b,i) => {
             let source = { uri: BUCKETIMAGES+'/'+b.image_filename}
             return (
-                <TouchableOpacity key={Math.random()} style={styles.cardImage}>
+                <TouchableOpacity key={i} style={styles.cardImage}>
                     {b.profile_picture &&
                     <View style={{zIndex: 4, width:31,height:31,borderWidth:1,borderColor:"#ccc",borderRadius:20, position: "absolute", right: -6, top: -6}}>
                         <CacheableImage style={{width:30,height:30,borderWidth:3,borderColor:"white",borderRadius:15,position: "absolute", right: 0, top: 0}} source={{uri: BUCKETIMAGES+'/'+b.profile_picture}}/>
@@ -124,7 +123,7 @@ export default class Team extends Component {
             )
         });
         return(
-                <View key={this.state['reRender'+value.id]} style={styles.statusContainer}>
+                <View key={value.id} style={styles.statusContainer}>
                      <View style={[styles.statusHeader,{height: 50, alignItems: "center"}]}>
                         <View style={{flex:0.85}}>
                                 <View style={{flexDirection: "row"}}> 
@@ -154,6 +153,7 @@ export default class Team extends Component {
                                     underlineColorAndroid="transparent"
                                     multiline={true}
                                     blurOnSubmit={true}
+                                    value={this.state['comment'+value.id]}
                                     onChangeText={(commentInput) => {this.setState({["comment"+value.id]: commentInput})}}
                                 />
                         </View>

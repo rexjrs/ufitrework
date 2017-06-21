@@ -3,14 +3,18 @@ import {
 StyleSheet,
 Text,
 View,
-Dimensions
+Dimensions,
+Platform,
+TextInput
 } from 'react-native';
 
 export default class Journey extends Component {
     render() {
         return(
             <View style={styles.container}>
+                {Platform.OS === "ios" &&
                 <View style={styles.statusBar}></View>
+                }
             </View>
         )
     }

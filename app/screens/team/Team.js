@@ -9,7 +9,8 @@ TouchableOpacity,
 Image,
 TextInput,
 ActivityIndicator,
-Platform
+Platform,
+RefreshControl
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 import moment from 'moment';
@@ -22,7 +23,8 @@ export default class Team extends Component {
         this.state = { 
             dataSource: ds.cloneWithRows(['row 1', 'row 2']),
             dataSourceClean: [],
-            loading: true
+            loading: true,
+            refreshing: false
         };
     }
 
@@ -30,6 +32,12 @@ export default class Team extends Component {
         this.setState({
             username: this.props.screenProps.username
         },this.getFeed)
+    }
+
+    _onRefresh(){
+        this.setState({refreshing: true, loading: true});
+        this.getFeed()
+        this.setState({refreshing: false});
     }
 
     getFeed(){
@@ -183,6 +191,12 @@ export default class Team extends Component {
                 }
                 {!this.state.loading &&
                 <ListView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this._onRefresh.bind(this)}
+                            />
+                        }
                         dataSource = {this.state.dataSource}
                         renderRow  = {this._renderRow.bind(this)}
                         initialListSize={10}

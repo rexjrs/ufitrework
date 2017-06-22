@@ -15,6 +15,7 @@ import moment from 'moment'
 import Progress from './Progress'
 import FoodCard from './FoodCard'
 import CompletedCard from './CompletedCard'
+import ProductCard from './ProductCard'
 import Week from './Week'
 
 var GlobalToday = new Date();
@@ -38,7 +39,8 @@ export default class Logging extends Component {
             stateDate: new Date(),
             visible: false,
             selectedPost: null,
-            products: []
+            products: [],
+            originalProduct: this.props.screenProps.products
         };
     }
 
@@ -47,8 +49,40 @@ export default class Logging extends Component {
         this.getProducts()
     }
 
-    getProducts(){
-        console.log(this.props.screenProps)
+    componentWillReceiveProps(nextProps){
+        this.getProducts(nextProps.screenProps.products)
+    }
+
+    getProducts(value){
+        let products = this.props.screenProps.products
+        if(value){
+            products = value
+        }
+        let tempArray = []
+        for(var i in products){
+            if(products[i].selected){
+                for(var e = 0;e<products[i].dosage;e++){
+                    let dosage
+                    let outOf
+                    if(products[i].dosage>1){
+                        dosage = products[i].dosage
+                        outOf = e+1
+                    }else{
+                        dosage = ""
+                        outOf = ""
+                    }
+                    tempArray.push({
+                        id: products[i].id,
+                        name: products[i].name,
+                        outOf: outOf,
+                        dosage: dosage
+                    })
+                }
+            }
+        }
+        this.setState({
+            products: tempArray
+        })
     }
 
     fetchDay(date,force){
@@ -86,7 +120,6 @@ export default class Logging extends Component {
             .then((response) => {
                 this.setState({loading: false})
                 let responseJson = JSON.parse(response._bodyInit);
-                console.log(responseJson)
                 if(responseJson.status == "ok"){
                     if(responseJson.result.breakfast){
                         let tempArray = this.state.presets
@@ -268,6 +301,11 @@ export default class Logging extends Component {
                 <CompletedCard key={i} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image} restDay={b.restDay}/>
             )
         });
+        var ProductCards = this.state.products.map((b,i)=>{
+            return(
+                <ProductCard key={i} id={b.id} name={b.name} outOf={b.outOf} dosage={b.dosage} />
+            )
+        })
         return(
             <View style={styles.container}>
                 <Week fetchDay={this.fetchDay.bind(this)}/>
@@ -284,6 +322,7 @@ export default class Logging extends Component {
                     </View>
                     }
                     { FoodCards }
+                    { ProductCards }
                     <View style={styles.completed}>
                         <Text style={styles.completedText}>Completed Activities</Text>
                     </View>

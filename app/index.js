@@ -5,7 +5,8 @@ import {
   StyleSheet,
   View,
   AsyncStorage,
-  StatusBar
+  StatusBar,
+  Image
 } from 'react-native';
 import './config/config';
 
@@ -20,7 +21,8 @@ class Index extends Component {
             profileImage: '',
             challengeID: '',
             needChallenge: null,
-            products: []
+            products: [],
+            loaded: false
         };
     }
 
@@ -59,7 +61,7 @@ class Index extends Component {
     getData(){
         AsyncStorage.multiGet(['username','firstName','profileImage','challenge','selectedProducts'], (err, keys) => {
             if(keys[0][1] == null){
-
+                this.setState({loaded: true})
             }else{
                 this.setState({
                     username: keys[0][1],
@@ -78,8 +80,15 @@ class Index extends Component {
         })
     }
 
+    setProducts(value){
+        AsyncStorage.setItem('selectedProducts',JSON.stringify(value));
+        this.setState({
+            products: value
+        })
+    }
+
     logIn(){
-        this.setState({loggedIn: true})
+        this.setState({loaded: true,loggedIn: true})
     }
 
     loggedIn(){
@@ -93,22 +102,35 @@ class Index extends Component {
     }
 
     render(){
+        var restingView = ()=>{
+            return(
+                <Image source={require('./assets/gradientBg.png')} style={{flex: 1,backgroundColor: "#FF9800",height: null,width: null}}>
+
+                </Image>
+            )
+        }
         return(
             <View style={{flex: 1}}>
                 <StatusBar
                     barStyle="default"
                 />
+                {!this.state.loaded &&
+                    restingView()
+                }
                 {this.state.loggedIn &&
+                    this.state.loaded &&
                     <Tabs screenProps={{
                         username: this.state.username,
                         firstName: this.state.firstName,
                         profileImage: this.state.profileImage,
                         challengeID: this.state.challengeID,
                         products: this.state.products,
+                        setProducts: this.setProducts.bind(this),
                         logout: this.logout.bind(this)
                     }}/>
                 }
                 {!this.state.loggedIn &&
+                    this.state.loaded &&
                     <LoginNav screenProps={{
                         login: this.loggedIn.bind(this)
                     }}/>

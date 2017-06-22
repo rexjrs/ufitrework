@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     Dimensions,
     AsyncStorage,
-    ActivityIndicator
+    ActivityIndicator,
+    StatusBar
 } from 'react-native';
 
 export default class Login extends Component {
@@ -24,6 +25,9 @@ export default class Login extends Component {
     render() {
         return(
             <Image source={require('../../assets/gradientBg.png')} style={styles.container}>
+                <StatusBar
+                    barStyle="light-content"
+                />
                 <View style={styles.loginTop}>
                     <TouchableOpacity 
                         style={styles.loginBtn}
@@ -39,7 +43,7 @@ export default class Login extends Component {
                 </View>
                 <View style={styles.buttonContainer}>
                     <View style={styles.buttonRow}>
-                        {!this.state.loadingFB &&
+                        {/*{!this.state.loadingFB &&
                         <TouchableOpacity 
                             style={styles.mainBtn}
                         >
@@ -70,9 +74,10 @@ export default class Login extends Component {
                                 size="large"
                             />
                         </View>
-                        }
+                        }*/}
                         <TouchableOpacity 
                             style={styles.mainBtn}
+                            onPress={()=>this.props.navigation.navigate('Name')}
                         >
                             <Text style={styles.mainBtnText}>Create Account</Text>
                         </TouchableOpacity>

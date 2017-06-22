@@ -69,7 +69,7 @@ export default class Product extends Component {
             dataSourceClean: tempArray,
             dataSource: ds.cloneWithRows(tempArray),
         })
-        AsyncStorage.setItem('selectedProducts',JSON.stringify(tempArray));
+        this.props.navigation.state.params.screenProps.setProducts(tempArray)
     }
 
     _renderRow(value){
@@ -144,6 +144,9 @@ export default class Product extends Component {
                     onRequestClose={()=>this.setState({visible: false})}
                 >
                     <View style={styles.modalContainer}>
+                            {Platform.OS === "ios" &&
+                            <View style={styles.statusBar}></View>
+                            }
                         <View style={styles.modalHeader}>
                             <TouchableOpacity onPress={()=>this.setState({visible: false})} style={styles.back}>
                                 <Text style={{color: "white"}}>Back</Text>
@@ -171,6 +174,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#F2F2F2"
+    },
+    statusBar:{
+        height: 10,
+        backgroundColor: "#1CBCD4"
     },
     innerSelected: {
         flexDirection: "row",
@@ -227,7 +234,7 @@ const styles = StyleSheet.create({
     navBar: {
         height: (Platform.OS === 'ios') ? 60 : 50,
         backgroundColor: "#1CBCD4",
-        paddingTop: (Platform.OS === 'ios') ? 0 : 0,
+        paddingTop: (Platform.OS === 'ios') ? 10 : 0,
         marginBottom: 20,
         flexDirection: "row"
     },

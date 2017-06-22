@@ -49,10 +49,10 @@ export default class More extends Component {
                 <TouchableOpacity style={styles.cellContainer}>
                     <Text style={styles.cellText}>Add Coach & Friends</Text>
                 </TouchableOpacity>*/}
-                <TouchableOpacity onPress={()=>this.props.navigation.navigate('Product',{products: this.props.screenProps.products})} style={styles.cellContainer}>
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate('Product',{products: this.props.screenProps.products, screenProps: this.props.screenProps})} style={styles.cellContainer}>
                     <Text style={styles.cellText}>Edit Goals</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cellContainer}>
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate('JoinChallenge')} style={styles.cellContainer}>
                     <Text style={styles.cellText}>Join Challenges</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cellContainer} onPress={this.logout.bind(this)}>

@@ -59,20 +59,32 @@ export default class NormalLogin extends Component {
                 if(responseJson.status == "ok"){
                     AsyncStorage.setItem('loginType','normal');
                     AsyncStorage.setItem('username',responseJson.result.username);
-                    AsyncStorage.setItem('BA', responseJson.result.BA);
-                    AsyncStorage.setItem('challenge', responseJson.result.coach_challenge_id);
-                    AsyncStorage.setItem('firstName', responseJson.result.first_name);
+                    if(responseJson.result.profile_picture){
+                        AsyncStorage.setItem('profileImage', responseJson.result.profile_picture);
+                    }
+                    if(responseJson.result.BA){
+                        AsyncStorage.setItem('BA', responseJson.result.BA);
+                    }
+                    if(responseJson.result.coach_challenge_id){
+                        AsyncStorage.setItem('challenge', responseJson.result.coach_challenge_id);
+                    }
+                    if(responseJson.result.first_name){
+                        AsyncStorage.setItem('firstName', responseJson.result.first_name);  
+                    }
+                    if(responseJson.result.birthday){
+                        AsyncStorage.setItem('birthday', responseJson.result.birthday);
+                    }
+                    if(responseJson.result.vision){
+                        AsyncStorage.setItem('vision', responseJson.result.vision);
+                    }
+                    if(responseJson.result.gender){
+                        AsyncStorage.setItem('gender', responseJson.result.gender);
+                    }
                     AsyncStorage.setItem('lastName', responseJson.result.last_name);
                     AsyncStorage.setItem('email', responseJson.result.email);
-                    AsyncStorage.setItem('birthday', responseJson.result.birthday);
-                    AsyncStorage.setItem('vision', responseJson.result.vision);
-                    AsyncStorage.setItem('gender', responseJson.result.gender);
-                    AsyncStorage.setItem('profileImage', responseJson.result.profile_picture);
                     setTimeout(() => {
                         if(!responseJson.result.coach_challenge_id){
-                            this.props.navigator.push({
-                                id: 'addchallenge'
-                            })
+                            this.props.navigation.navigate('AddChallenge')
                         }else{
                             this.props.screenProps.login()
                         }

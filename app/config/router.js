@@ -7,6 +7,11 @@ import { Icon } from 'react-native-elements'
 
 import Login from '../screens/login/Login'
 import NormalLogin from '../screens/login/NormalLogin'
+import Name from '../screens/login/Name'
+import User from '../screens/login/User'
+import Username from '../screens/login/Username'
+import Ba from '../screens/login/Ba'
+import AddChallenge from '../screens/login/AddChallenge'
 
 import Journey from '../screens/journey/Journey'
 import More from '../screens/more/More'
@@ -15,6 +20,7 @@ import Team from '../screens/team/Team'
 
 import AddPost from '../screens/logging/AddPost'
 import Product from '../screens/more/Product'
+import JoinChallenge from '../screens/more/JoinChallenge'
 
 // Login Page Stack
 export const LoginNav = StackNavigator({
@@ -27,6 +33,36 @@ export const LoginNav = StackNavigator({
     },
     NormalLogin: {
         screen: NormalLogin,
+        navigationOptions: {
+            header: false
+        }
+    },
+    Name: {
+        screen: Name,
+        navigationOptions: {
+            header: false
+        }
+    },
+    User: {
+        screen: User,
+        navigationOptions: {
+            header: false
+        }
+    },
+    Username: {
+        screen: Username,
+        navigationOptions: {
+            header: false
+        }
+    },
+    Ba: {
+        screen: Ba,
+        navigationOptions: {
+            header: false
+        }
+    },
+    AddChallenge: {
+        screen: AddChallenge,
         navigationOptions: {
             header: false
         }
@@ -73,6 +109,12 @@ export const MoreStack = StackNavigator({
     },
     Product: {
         screen: Product,
+        navigationOptions: {
+            header: false
+        }
+    },
+    JoinChallenge: {
+        screen: JoinChallenge,
         navigationOptions: {
             header: false
         }

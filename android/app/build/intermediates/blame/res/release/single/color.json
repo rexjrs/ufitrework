@@ -48,8 +48,20 @@
         "source": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.0/res/color/abc_tint_edittext.xml"
     },
     {
+        "merged": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/res/merged/release/color/common_google_signin_btn_tint.xml",
+        "source": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.2.0/res/color/common_google_signin_btn_tint.xml"
+    },
+    {
+        "merged": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/res/merged/release/color/common_google_signin_btn_text_light.xml",
+        "source": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.2.0/res/color/common_google_signin_btn_text_light.xml"
+    },
+    {
         "merged": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/res/merged/release/color/abc_tint_btn_checkable.xml",
         "source": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.0/res/color/abc_tint_btn_checkable.xml"
+    },
+    {
+        "merged": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/res/merged/release/color/common_google_signin_btn_text_dark.xml",
+        "source": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.2.0/res/color/common_google_signin_btn_text_dark.xml"
     },
     {
         "merged": "/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/res/merged/release/color/abc_secondary_text_material_light.xml",

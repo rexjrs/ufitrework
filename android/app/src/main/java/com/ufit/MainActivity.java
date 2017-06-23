@@ -1,4 +1,4 @@
-package com.ufit;
+package com.ufitcity;
 
 import com.facebook.react.ReactActivity;
 

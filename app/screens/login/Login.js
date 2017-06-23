@@ -8,14 +8,108 @@ import {
     Dimensions,
     AsyncStorage,
     ActivityIndicator,
-    StatusBar
+    StatusBar,
+    Platform
 } from 'react-native';
+import {GoogleSignin} from 'react-native-google-signin';
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = { 
         }
+    }
+
+componentDidMount(){
+    try{
+        if(Platform.OS === "ios"){
+            GoogleSignin.configure({
+            iosClientId:"365391078149-6cl703urejicdr0p1rgiq73c32v5vovv.apps.googleusercontent.com",
+            webClientId: "365391078149-6cl703urejicdr0p1rgiq73c32v5vovv.apps.googleusercontent.com",
+            offlineAccess: false
+        });
+    }else if (Platform.OS === "android") {
+            GoogleSignin.hasPlayServices({ autoResolve: true });
+            GoogleSignin.configure({
+            webClientId: "776279562791-0io163q4pnde8858kioah4usbrg4cnl4.apps.googleusercontent.com",
+            offlineAccess: false
+            });
+        }
+    }
+    catch(err) {
+    console.log("Google error: ", err.code, err.message);
+    }
+}
+
+    signInGoogle(){
+        this.setState({
+            loadingGoogle: true,
+            loading: true
+        })
+        GoogleSignin.signIn()
+        .then((user) => {
+            let userinfo = GoogleSignin.currentUser();
+            let params = {
+                google_id: userinfo.id
+            }
+            console.log(userinfo)
+            fetch(`${APIURL3}/socialmedialogin`, {
+                method: 'POST',
+                body: JSON.stringify(params),
+                headers: HEADERPARAM3
+            })
+            .then((response) => {
+                let responseJson = JSON.parse(response._bodyInit);
+                this.setState({
+                    loadingGoogle: false,
+                    loading: false
+                })
+                if(responseJson.code == "00"){
+                    AsyncStorage.setItem('loginType','socialmedia');
+                    AsyncStorage.setItem('loginTypeSocial','google');
+                    AsyncStorage.setItem('username',responseJson.result.username);
+                    if(responseJson.result.profile_picture){
+                        AsyncStorage.setItem('profileImage', responseJson.result.profile_picture);
+                    }
+                    if(responseJson.result.BA){
+                        AsyncStorage.setItem('BA', responseJson.result.BA);
+                    }
+                    if(responseJson.result.coach_challenge_id){
+                        AsyncStorage.setItem('challenge', responseJson.result.coach_challenge_id);
+                    }
+                    if(responseJson.result.first_name){
+                        AsyncStorage.setItem('firstName', responseJson.result.first_name);  
+                    }
+                    if(responseJson.result.birthday){
+                        AsyncStorage.setItem('birthday', responseJson.result.birthday);
+                    }
+                    if(responseJson.result.vision){
+                        AsyncStorage.setItem('vision', responseJson.result.vision);
+                    }
+                    if(responseJson.result.gender){
+                        AsyncStorage.setItem('gender', responseJson.result.gender);
+                    }
+                    AsyncStorage.setItem('lastName', responseJson.result.last_name);
+                    AsyncStorage.setItem('email', responseJson.result.email);
+                    if(!responseJson.result.coach_challenge_id){
+                        this.props.navigation.navigate('AddChallenge')
+                    }else{
+                        this.props.screenProps.login()
+                    }
+                }else{
+                    const nameSplit = userinfo.name.split(" ");
+                    AsyncStorage.setItem('registerFirstName', nameSplit[0]);
+                    AsyncStorage.setItem('registerLastName', nameSplit[nameSplit.length -1]);
+                    AsyncStorage.setItem('regisType', 'google');
+                    AsyncStorage.setItem('registerId', userinfo.id);
+                    this.props.navigation.navigate('Email')
+                }
+            })
+        })
+        .catch((err) => {
+            console.log('WRONG SIGNIN', err);
+        })
+        .done();
     }
 
     normalLogin() {
@@ -60,11 +154,6 @@ export default class Login extends Component {
                         </View>
                         }
                         {!this.state.loading &&
-                        <TouchableOpacity
-                            style={styles.mainBtn}
-                        >
-                            <Text style={styles.mainBtnText}>Continue with Google</Text>
-                        </TouchableOpacity>
                         }
                         {this.state.loading &&
                         <View style={{width: window.width*0.7, alignItems: "center", marginTop: 5}}>
@@ -75,6 +164,23 @@ export default class Login extends Component {
                             />
                         </View>
                         }*/}
+                        {this.state.loading &&
+                        <View style={{width: window.width*0.7, alignItems: "center", marginTop: 5}}>
+                            <ActivityIndicator
+                                animating={true}
+                                color="white"
+                                size="small"
+                            />
+                        </View>
+                        }
+                        {!this.state.loadingGoogle &&
+                        <TouchableOpacity
+                            style={styles.mainBtn}
+                            onPress={this.signInGoogle.bind(this)}
+                        >
+                            <Text style={styles.mainBtnText}>Continue with Google</Text>
+                        </TouchableOpacity>
+                        }
                         <TouchableOpacity 
                             style={styles.mainBtn}
                             onPress={()=>this.props.navigation.navigate('Name')}

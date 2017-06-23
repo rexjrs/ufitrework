@@ -9,6 +9,7 @@ StatusBar,
 AsyncStorage,
 Platform
 } from 'react-native';
+import {GoogleSignin} from 'react-native-google-signin';
 
 export default class More extends Component {
     logout(){
@@ -24,8 +25,16 @@ export default class More extends Component {
         AsyncStorage.removeItem('gender');
         AsyncStorage.removeItem('profileImage');
         AsyncStorage.removeItem('selectedProducts');
+        setTimeout(() => {
+            GoogleSignin.signOut()
+            .then(() => {
 
-        this.props.screenProps.logout()
+            })
+            .catch((err) => {
+
+            });
+            this.props.screenProps.logout()
+        }, 1000)
     }
     
     render() {

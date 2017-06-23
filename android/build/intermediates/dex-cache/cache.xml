@@ -138,12 +138,39 @@
     </item>
     <item
         is-multidex="false"
+        jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="1ac56e5801e986583cbe27f2cce57f626cc7ff93">
+        <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-basement-10.2.0_bc58b50ac05d751451397061892f4b9e17de0937.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="23.0.1"
         sha1="f9b41622897665678d31d78e57a361cb0cebcb0d">
         <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-24.2.0_72266f81c7c876f9939e0ccf87b3b6073964e6fd.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth-base/10.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="4e01b82d664e1a8253b2b9658e74b5da35c8771d">
+        <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-auth-base-10.2.0_d728762295c406adeeca314824949b73a7a7bee6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/UFIT/react-native-google-signin/unspecified/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="3db33d8c07001f2894650c6d8a811a6ff1e9a1f7">
+        <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/UFIT-react-native-google-signin-unspecified_4ad830e7aaa59fe2add36f92487fd2991be4185d.jar" />
     </item>
     <item
         is-multidex="false"
@@ -189,6 +216,15 @@
         revision="23.0.1"
         sha1="8ace66ef7002d98f633377c9e67daeeb196d8c3b">
         <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/okhttp-ws-3.4.1_1e0700fa1f4812a1f25439bca4e33cc0b4cc0b65.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="bd75f9f0296fe220da6d0ad961831b04541c4452">
+        <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-tasks-10.2.0_f4d735f46bcba91e384f4dffc6f248b7a1bf40ec.jar" />
     </item>
     <item
         is-multidex="false"
@@ -273,6 +309,15 @@
     </item>
     <item
         is-multidex="false"
+        jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="3d13e510077b35fe8e49930a627dd849ad5da0dc">
+        <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-base-10.2.0_853c31fc2f705ac23f3687745d65210a5eb54668.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.facebook.fresco/imagepipeline-base/1.0.1/jars/classes.jar"
         jumboMode="false"
         optimize="true"
@@ -351,6 +396,15 @@
         revision="23.0.1"
         sha1="24497dd7ccdf848dde14335011e715dcc1110275">
         <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/com.yalantis-ucrop-2.2.0-native_7a84b497eb37159330fdeba34696b8375c913774.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/10.2.0/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="23.0.1"
+        sha1="b831d3902674d096189451d46fce219e2c2904b7">
+        <dex dex="/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-auth-10.2.0_ff19f2859ffb8abf6234fba2eed3b14d75b69957.jar" />
     </item>
 
 </items>

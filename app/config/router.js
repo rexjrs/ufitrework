@@ -12,6 +12,7 @@ import User from '../screens/login/User'
 import Username from '../screens/login/Username'
 import Ba from '../screens/login/Ba'
 import AddChallenge from '../screens/login/AddChallenge'
+import Email from '../screens/login/Email'
 
 import Journey from '../screens/journey/Journey'
 import More from '../screens/more/More'
@@ -63,6 +64,12 @@ export const LoginNav = StackNavigator({
     },
     AddChallenge: {
         screen: AddChallenge,
+        navigationOptions: {
+            header: false
+        }
+    },
+    Email: {
+        screen: Email,
         navigationOptions: {
             header: false
         }

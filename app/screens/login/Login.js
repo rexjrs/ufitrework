@@ -60,10 +60,6 @@ componentDidMount(){
             })
             .then((response) => {
                 let responseJson = JSON.parse(response._bodyInit);
-                this.setState({
-                    loadingGoogle: false,
-                    loading: false
-                })
                 if(responseJson.code == "00"){
                     AsyncStorage.setItem('loginType','socialmedia');
                     AsyncStorage.setItem('loginTypeSocial','google');
@@ -107,7 +103,10 @@ componentDidMount(){
             })
         })
         .catch((err) => {
-            console.log('WRONG SIGNIN', err);
+                this.setState({
+                    loadingGoogle: false,
+                    loading: false
+                })
         })
         .done();
     }

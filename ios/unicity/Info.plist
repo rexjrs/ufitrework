@@ -28,9 +28,29 @@
 				<string>fb485791475100034</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.googleusercontent.apps.365391078149-va0qe8jgqt24aaj022dbtthfedfiapd8</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.365391078149-va0qe8jgqt24aaj022dbtthfedfiapd8</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.unicity.UnicityFit</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.unicity.UnicityFit</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>7.5</string>
+	<string>7.6</string>
 	<key>FacebookAppID</key>
 	<string>485791475100034</string>
 	<key>FacebookDisplayName</key>

@@ -4,50 +4,92 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Bolts.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>36</integer>
+		</dict>
+		<key>FBSDKCoreKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>37</integer>
+		</dict>
+		<key>FBSDKLoginKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>38</integer>
+		</dict>
+		<key>FBSDKShareKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>39</integer>
+		</dict>
 		<key>GTMOAuth2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>41</integer>
 		</dict>
 		<key>GTMSessionFetcher.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>42</integer>
 		</dict>
 		<key>GoogleToolboxForMac.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>40</integer>
 		</dict>
 		<key>Pods-unicity.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>43</integer>
 		</dict>
 		<key>QBImagePickerController-QBImagePicker.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>45</integer>
 		</dict>
 		<key>QBImagePickerController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>44</integer>
 		</dict>
 		<key>RSKImageCropper.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
+			<key>orderHint</key>
+			<integer>46</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>2A5025F43159A6F1B55401B356DB252F</key>
+		<key>0D8685F86E6F19D2188A12A12CBAD81E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>36ACE7B2235F031E2543D01827F1FE36</key>
+		<key>3C7B23B3FE0CE1A6131C7E09B3F47DA3</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -62,17 +104,37 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B3CCF2369BD890A4719578AC1477BD9F</key>
+		<key>59741E0C2DCAEE9DEAA2061A74DF54A5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D3BDCD824D1E7C9B1EAC21DA5CA9EAD2</key>
+		<key>5DC7D7B380A5FEAE815A0DDD986A0174</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>80BE9D499ABF73E2FBBC841B6655C570</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E647D8EF2F85911A4A212CFFB0653CC6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>EAE45C123C22F83F258F201FDFBA835E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F58CF3B268C937FF221EC44C97C18A9F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FB06743FD599C11559E52D2D552AEE80</key>
 		<dict>
 			<key>primary</key>
 			<true/>

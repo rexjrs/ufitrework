@@ -12,7 +12,7 @@ import {
     Platform
 } from 'react-native';
 import {GoogleSignin} from 'react-native-google-signin';
-// import FBSDK, {LoginManager, AccessToken} from 'react-native-fbsdk'
+import FBSDK, {LoginManager, AccessToken} from 'react-native-fbsdk'
 // import {FBLogin, FBLoginManager} from 'react-native-facebook-login'
 
 export default class Login extends Component {
@@ -281,7 +281,7 @@ export default class Login extends Component {
                             />
                         </View>
                         }*/}
-                        {this.state.loadingFacebooks &&
+                        {!this.state.loadingFacebook &&
                         <TouchableOpacity 
                             style={styles.mainBtn}
                             onPress={this.signInFacebook.bind(this)}

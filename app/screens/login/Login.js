@@ -12,6 +12,8 @@ import {
     Platform
 } from 'react-native';
 import {GoogleSignin} from 'react-native-google-signin';
+// import FBSDK, {LoginManager, AccessToken} from 'react-native-fbsdk'
+// import {FBLogin, FBLoginManager} from 'react-native-facebook-login'
 
 export default class Login extends Component {
     constructor(props) {
@@ -20,26 +22,145 @@ export default class Login extends Component {
         }
     }
 
-componentDidMount(){
-    try{
-        if(Platform.OS === "ios"){
-            GoogleSignin.configure({
-            iosClientId:"365391078149-6cl703urejicdr0p1rgiq73c32v5vovv.apps.googleusercontent.com",
-            webClientId: "365391078149-6cl703urejicdr0p1rgiq73c32v5vovv.apps.googleusercontent.com",
-            offlineAccess: false
-        });
-    }else if (Platform.OS === "android") {
-            GoogleSignin.hasPlayServices({ autoResolve: true });
-            GoogleSignin.configure({
-            webClientId: "776279562791-0io163q4pnde8858kioah4usbrg4cnl4.apps.googleusercontent.com",
-            offlineAccess: false
+    componentDidMount(){
+        try{
+            if(Platform.OS === "ios"){
+                GoogleSignin.configure({
+                // For RELEASE
+                iosClientId:"365391078149-va0qe8jgqt24aaj022dbtthfedfiapd8.apps.googleusercontent.com",
+                webClientId: "365391078149-va0qe8jgqt24aaj022dbtthfedfiapd8.apps.googleusercontent.com",
+                // For Debug
+                // iosClientId:"365391078149-6cl703urejicdr0p1rgiq73c32v5vovv.apps.googleusercontent.com",
+                // webClientId: "365391078149-6cl703urejicdr0p1rgiq73c32v5vovv.apps.googleusercontent.com",
+                offlineAccess: false
             });
+        }else if (Platform.OS === "android") {
+                GoogleSignin.hasPlayServices({ autoResolve: true });
+                GoogleSignin.configure({
+                webClientId: "1009131261313-sq6khtjj18cc8gm0d07ru9ocup7ccl5p.apps.googleusercontent.com",
+                offlineAccess: false
+                });
+            }
+        }
+        catch(err) {
+        console.log("Google error: ", err.code, err.message);
         }
     }
-    catch(err) {
-    console.log("Google error: ", err.code, err.message);
+
+    androidFBLogin(){
+        this.setState({
+            loadingFacebook: true,
+            loading: true
+        })
+        FBLoginManager.loginWithPermissions(["email","user_friends"], (error, data) => {
+        if (!error) {
+            this.setState({
+                loadingFB: true
+            })
+            this.loginFB(JSON.parse(data.profile))
+        } else {
+            console.log("Error: ", error);
+        }
+        })
     }
-}
+
+    loginFB(value){
+        console.log(value.id)
+        let params = {
+            facebook_id: value.id
+        }
+        fetch(`${APIURL3}/socialmedialogin`, {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: HEADERPARAM3
+        })
+        .then((response) => {
+            let responseJson = JSON.parse(response._bodyInit);
+            if(responseJson.code == "00"){
+                AsyncStorage.setItem('loginType','socialmedia');
+                AsyncStorage.setItem('loginTypeSocial','facebook');
+                AsyncStorage.setItem('username',responseJson.result.username);
+                if(responseJson.result.profile_picture){
+                    AsyncStorage.setItem('profileImage', responseJson.result.profile_picture);
+                }
+                if(responseJson.result.BA){
+                    AsyncStorage.setItem('BA', responseJson.result.BA);
+                }
+                if(responseJson.result.coach_challenge_id){
+                    AsyncStorage.setItem('challenge', responseJson.result.coach_challenge_id);
+                }
+                if(responseJson.result.first_name){
+                    AsyncStorage.setItem('firstName', responseJson.result.first_name);  
+                }
+                if(responseJson.result.birthday){
+                    AsyncStorage.setItem('birthday', responseJson.result.birthday);
+                }
+                if(responseJson.result.vision){
+                    AsyncStorage.setItem('vision', responseJson.result.vision);
+                }
+                if(responseJson.result.gender){
+                    AsyncStorage.setItem('gender', responseJson.result.gender);
+                }
+                AsyncStorage.setItem('lastName', responseJson.result.last_name);
+                AsyncStorage.setItem('email', responseJson.result.email);
+                if(!responseJson.result.coach_challenge_id){
+                    this.props.navigation.navigate('AddChallenge')
+                }else{
+                    this.props.screenProps.login()
+                }
+            }else{
+                const nameSplit = value.name.split(" ");
+                AsyncStorage.setItem('registerFirstName', nameSplit[0]);
+                AsyncStorage.setItem('registerLastName', nameSplit[nameSplit.length -1]);
+                AsyncStorage.setItem('regisType', 'facebook');
+                AsyncStorage.setItem('registerId', value.id);
+                this.props.navigation.navigate('Email')
+            }
+        })
+    }
+
+    signInFacebook(){
+        if(Platform.OS === "android"){
+            this.androidFBLogin()
+        }else{
+            let that = this
+            this.setState({
+                loadingFacebook: true,
+                loading: true
+            })
+            LoginManager.logInWithReadPermissions(['email','public_profile']).then(
+                function(result) {
+                    if (result.isCancelled) {
+                        this.setState({
+                            loadingGoogle: false,
+                            loading: false
+                        })
+                    } else {
+                        console.log(result)
+                        AccessToken.getCurrentAccessToken().then(
+                            (data)=>{
+                                let token = data.accessToken
+                                fetch('https://graph.facebook.com/v2.5/me?fields=name&access_token=' + token, {
+                                    method: 'GET',
+                                    headers: HEADERPARAM3
+                                })
+                                .then((response) => {
+                                    let responseJson = JSON.parse(response._bodyInit);
+                                    that.loginFB(responseJson)
+                                })
+                            }
+                        )
+                    }
+                },
+                function(error) {
+                    this.setState({
+                        loadingGoogle: false,
+                        loading: false
+                    })
+                }
+            );
+        }
+    }
 
     signInGoogle(){
         this.setState({
@@ -48,6 +169,7 @@ componentDidMount(){
         })
         GoogleSignin.signIn()
         .then((user) => {
+            console.log(user)
             let userinfo = GoogleSignin.currentUser();
             let params = {
                 google_id: userinfo.id
@@ -103,6 +225,7 @@ componentDidMount(){
             })
         })
         .catch((err) => {
+            console.log(err)
                 this.setState({
                     loadingGoogle: false,
                     loading: false
@@ -137,11 +260,6 @@ componentDidMount(){
                 <View style={styles.buttonContainer}>
                     <View style={styles.buttonRow}>
                         {/*{!this.state.loadingFB &&
-                        <TouchableOpacity 
-                            style={styles.mainBtn}
-                        >
-                            <Text style={styles.mainBtnText}>Continue with Facebook</Text>
-                        </TouchableOpacity>
                         }
                         {this.state.loadingFB &&
                         <View style={{width: window.width*0.7, alignItems: "center", marginTop: 5}}>
@@ -163,6 +281,14 @@ componentDidMount(){
                             />
                         </View>
                         }*/}
+                        {this.state.loadingFacebooks &&
+                        <TouchableOpacity 
+                            style={styles.mainBtn}
+                            onPress={this.signInFacebook.bind(this)}
+                        >
+                            <Text style={styles.mainBtnText}>Continue with Facebook</Text>
+                        </TouchableOpacity>
+                        }
                         {this.state.loading &&
                         <View style={{width: window.width*0.7, alignItems: "center", marginTop: 5}}>
                             <ActivityIndicator

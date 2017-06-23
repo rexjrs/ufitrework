@@ -1,0 +1,4 @@
+pod 'RSKImageCropper'
+pod 'QBImagePickerController'
+pod 'Google/SignIn'
+target 'unicity'

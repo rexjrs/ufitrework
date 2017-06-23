@@ -5,4 +5,4 @@ import {
 import Index from './app/index.js'
 
 
-AppRegistry.registerComponent('UFIT', () => Index);
+AppRegistry.registerComponent('unicity', () => Index);

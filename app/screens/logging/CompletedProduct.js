@@ -35,8 +35,24 @@ export default class ProductCard extends Component {
 
     }
 
+    deleteSupplement(){
+        this.setState({
+            loading: true
+        })
+        let params ={ 
+            supplement_id: this.props.real_id
+        }
+        fetch(`${APIURL3}/deletesupplement`, {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: HEADERPARAM3
+        })
+        .then((response) => {
+            this.props.getProduct(this.props.stateDate)
+        })  
+    }
+
     render() {
-        console.log(this.props.is_taken)
         return (
             <View style={styles.container}>
                 <TouchableWithoutFeedback>
@@ -61,9 +77,20 @@ export default class ProductCard extends Component {
                                 <Icon name="ios-checkmark-circle" type="ionicon" size={35} color="#CCC" />
                                 }
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.headerIcon}>
+                            {!this.state.loading &&
+                            <TouchableOpacity onPress={this.deleteSupplement.bind(this)} style={styles.headerIcon}>
                                 <Icon name="ios-trash" type="ionicon" size={35} color="gray" />
                             </TouchableOpacity>
+                            }
+                            {this.state.loading &&
+                            <View style={[styles.headerIcon,{marginTop: 25}]}>
+                                <ActivityIndicator
+                                    size="small"
+                                    color="#E91E63"
+                                    animating={true}
+                                />
+                            </View>
+                            }
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

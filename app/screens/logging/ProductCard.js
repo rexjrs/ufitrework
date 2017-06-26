@@ -24,6 +24,7 @@ export default class ProductCard extends Component {
     constructor(props) {
         super(props);
         this.state = { 
+            loading: false
         };
     }
 
@@ -33,6 +34,30 @@ export default class ProductCard extends Component {
 
     componentDidMount(){
 
+    }
+
+    logSupplement(value){
+        this.setState({
+            loading: true
+        })
+        let params = {
+            username: this.props.screenProps.username,
+            product_id:  this.props.id,
+            date: this.props.stateDate,
+            is_taken: value
+        }
+        fetch(`${APIURL3}/addsupplement`, {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: HEADERPARAM3
+        })
+        .then((response) => {
+            let responseJson = JSON.parse(response._bodyInit);
+            if(responseJson.status == "ok"){
+                console.log('ok')
+                this.props.getProduct(this.props.stateDate)
+            }
+        })
     }
 
     render() {
@@ -47,12 +72,25 @@ export default class ProductCard extends Component {
                                 <Text style={[styles.headerText,{color: "#8BC34A",fontSize: 13}]}>{this.props.outOf} of {this.props.dosage}</Text>
                                 }
                             </View>
-                            <TouchableOpacity style={styles.headerIcon}>
+                            {!this.state.loading &&
+                            <TouchableOpacity onPress={()=>this.logSupplement("0")} style={styles.headerIcon}>
                                 <Icon name="ios-close-circle" type="ionicon" size={35} color="#E91E63" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.headerIcon}>
+                            }
+                            {!this.state.loading &&
+                            <TouchableOpacity onPress={()=>this.logSupplement("1")} style={styles.headerIcon}>
                                 <Icon name="ios-checkmark-circle" type="ionicon" size={35} color="#8BC34A" />
                             </TouchableOpacity>
+                            }
+                            {this.state.loading &&
+                            <View style={[styles.headerIcon,{marginTop: 25}]}>
+                                <ActivityIndicator
+                                    size="small"
+                                    color="#E91E63"
+                                    animating={true}
+                                />
+                            </View>
+                            }
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

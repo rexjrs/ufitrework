@@ -52,10 +52,10 @@ export default class Logging extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        this.getProducts(nextProps.screenProps.products)
+        this.getProducts(nextProps.screenProps.products,true)
     }
 
-    getProducts(value){
+    getProducts(value,update){
         let products = this.props.screenProps.products
         if(value){
             products = value
@@ -83,9 +83,84 @@ export default class Logging extends Component {
                 }
             }
         }
+        if(update){
+            this.setState({
+                products: tempArray
+            },this.setTaken)
+        }else{
+            this.setState({
+                products: tempArray
+            })
+        }
+    }
+
+    setTaken(){
+        let supplements = this.state.supplements
+        let tempArray = this.state.products
+        for(var i in supplements){
+            let found = false
+            for(var e in tempArray){
+                if(tempArray[e].id == supplements[i].id){
+                    if(!found){
+                        if(tempArray[e].enabled){
+                            tempArray[e].enabled = false
+                            found = true
+                        }
+                    }
+                }
+            }
+        }
         this.setState({
             products: tempArray
         })
+    }
+
+    getProduct(date){
+        console.log('ioran')
+            fetch(`${APIURL3}/fetchdailyresources3?username=${this.state.username}&date=${date}`, {
+                method: 'GET',
+                headers: HEADERPARAM3
+            })
+            .then((response) => {
+                let responseJson = JSON.parse(response._bodyInit);
+                if(responseJson.status == "ok"){
+                    if(responseJson.result.supplements.length>0){
+                        this.setState({
+                            supplements: [],
+                            someData: responseJson
+                        },this.setSupplements)
+                    }else{
+                        this.setState({
+                            supplements: []
+                        },this.getProducts(this.props.screenProps.products,true))
+                    }
+                }
+            })
+    }
+
+    setSupplements(){
+        let responseJson = this.state.someData
+        let supplements = responseJson.result.supplements
+        let cardTempArray = this.state.supplements
+        let tempArray = this.state.products
+        for(var i in supplements){
+            cardTempArray.push({
+                real_id: supplements[i].id,
+                id: supplements[i].product_id,
+                name: supplements[i].product_name,
+                is_taken: supplements[i].is_taken
+            })
+        }
+        let tempHistory = this.state.dayHistory
+        for(var i in tempHistory){
+            if(tempHistory[i].date == this.state.stateDate){
+                tempHistory[i].supplements = cardTempArray
+            }
+        }
+        this.setState({
+            supplements: cardTempArray,
+            dayHistory: tempHistory
+        },this.getProducts(this.props.screenProps.products,true))
     }
 
     fetchDay(date,force){
@@ -98,9 +173,10 @@ export default class Logging extends Component {
                 {type: "Exercise",icon: "exercise", enabled: true},
             ],
             completedCards: [],
+            supplements: [],
             completedCount: 0,
             stateDate: moment(date).format('YYYY-MM-DD')
-        })
+        },this.getProducts(this.props.screenProps.products,true))
         let found = false
         if(!force){
             for(var i in this.state.dayHistory){
@@ -109,6 +185,7 @@ export default class Logging extends Component {
                     this.setState({
                         completedCards: this.state.dayHistory[i].data,
                         presets: this.state.dayHistory[i].presets,
+                        supplements: this.state.dayHistory[i].supplements,
                         completedCount: this.state.dayHistory[i].data.length
                     })
                 }
@@ -218,21 +295,18 @@ export default class Logging extends Component {
                     if(responseJson.result.supplements.length>0){
                         let supplements = responseJson.result.supplements
                         let cardTempArray = this.state.supplements
+                        let tempArray = this.state.products
                         for(var i in supplements){
-                            let tempArray = this.state.products
-                            for(var e in tempArray){
-                                if(tempArray[e].id == supplements[i].product_id){
-                                    console.log(tempArray[e].id)
-                                }
-                            }
                             cardTempArray.push({
+                                real_id: supplements[i].id,
+                                id: supplements[i].product_id,
                                 name: supplements[i].product_name,
                                 is_taken: supplements[i].is_taken
                             })
                         }
                         this.setState({
                             supplements: cardTempArray
-                        })
+                        },this.setTaken)
                     }
                     setTimeout(() => {
                         let tempArray = this.state.dayHistory
@@ -251,7 +325,8 @@ export default class Logging extends Component {
                             tempArray.push({
                                 date: date,
                                 data: this.state.completedCards,
-                                presets: this.state.presets
+                                presets: this.state.presets,
+                                supplements: this.state.supplements
                             })
                         }
                         this.setState({
@@ -327,12 +402,12 @@ export default class Logging extends Component {
         var ProductCards = this.state.products.map((b,i)=>{
             return(
                 b.enabled &&
-                <ProductCard key={i} id={b.id} name={b.name} outOf={b.outOf} dosage={b.dosage} />
+                <ProductCard key={i} id={b.id} name={b.name} outOf={b.outOf} dosage={b.dosage} screenProps={this.props.screenProps} stateDate={this.state.stateDate} getProduct={this.getProduct.bind(this)}/>
             )
         })
         var CompletedProducts = this.state.supplements.map((b,i)=>{
             return(
-                <CompletedProduct key={i} name={b.name} is_taken={b.is_taken}/>
+                <CompletedProduct key={i} name={b.name} is_taken={b.is_taken} real_id={b.real_id} stateDate={this.state.stateDate} getProduct={this.getProduct.bind(this)}/>
             )
         })
         return(

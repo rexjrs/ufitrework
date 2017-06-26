@@ -114,7 +114,6 @@ export default class FoodCard extends Component {
     }
 
     fetchDayCallback(value,day){
-        console.log(this.props.activityHappening)
         if(!this.props.activityHappening){
             this.props.fetchDay(value)
             this.selectedDay(day,value)

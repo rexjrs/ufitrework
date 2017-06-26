@@ -226,7 +226,7 @@ export default class Logging extends Component {
                 if(this.state.dayHistory[i].date === date){
                     found = true
                     let completedCounter = this.state.dayHistory[i].data.length
-                    if(this.state.dayHistory[i].fourTwelveTaken){
+                    if(this.state.dayHistory[i].fourTwelveLogged){
                         completedCounter = completedCounter+1
                     }
                     this.setState({
@@ -401,7 +401,8 @@ export default class Logging extends Component {
                         }
                         this.setState({
                             dayHistory: tempArray,
-                            activityHappening: false
+                            activityHappening: false,
+                            deletingID: null
                         })
                     },50)
                 }
@@ -455,7 +456,21 @@ export default class Logging extends Component {
     }
 
     deletePost(value){
-        console.log(value)
+        this.setState({visible: false, deletingID: value})
+        this.activityHappening(true)
+        let param = {
+            id: value,
+            username: this.state.username
+        }
+        let params = JSON.stringify(param);
+        fetch(`${APIURL3}/deletepost`, {
+            method: 'POST',
+            body: params,
+            headers: HEADERPARAM3
+        })
+        .then((response) => {
+            this.fetchDay(this.state.stateDate,true)
+        })
     }
 
     render() {
@@ -466,9 +481,21 @@ export default class Logging extends Component {
             )
         });
         var CompletedCards =  this.state.completedCards.map((b,i) => {
-            return (
-                <CompletedCard key={i} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image} restDay={b.restDay}/>
-            )
+            if(this.state.deletingID != b.id){
+                return (
+                    <CompletedCard key={i} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image} restDay={b.restDay}/>
+                )
+            }else{
+                return(
+                    <ActivityIndicator
+                        key={i}
+                        size="large"
+                        color="#E91E63"
+                        animating={true}
+                        style={{marginTop: 25,marginBottom: 10}}
+                    />
+                )
+            }
         });
         var ProductCards = this.state.products.map((b,i)=>{
             return(

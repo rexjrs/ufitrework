@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">unicity</string>
+    <string name="app_name">UnicityFit</string>
+    <string name="fb_app_id">485791475100034</string>
+    <string name="fb_login_protocol_scheme">fb485791475100034</string>
 </resources>

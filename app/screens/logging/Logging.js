@@ -17,6 +17,7 @@ import FoodCard from './FoodCard'
 import CompletedCard from './CompletedCard'
 import ProductCard from './ProductCard'
 import Week from './Week'
+import CompletedProduct from './CompletedProduct'
 
 var GlobalToday = new Date();
 
@@ -40,7 +41,8 @@ export default class Logging extends Component {
             visible: false,
             selectedPost: null,
             products: [],
-            originalProduct: this.props.screenProps.products
+            originalProduct: this.props.screenProps.products,
+            supplements: []
         };
     }
 
@@ -75,7 +77,8 @@ export default class Logging extends Component {
                         id: products[i].id,
                         name: products[i].name,
                         outOf: outOf,
-                        dosage: dosage
+                        dosage: dosage,
+                        enabled: true
                     })
                 }
             }
@@ -120,6 +123,7 @@ export default class Logging extends Component {
             .then((response) => {
                 this.setState({loading: false})
                 let responseJson = JSON.parse(response._bodyInit);
+                console.log(responseJson);
                 if(responseJson.status == "ok"){
                     if(responseJson.result.breakfast){
                         let tempArray = this.state.presets
@@ -209,6 +213,25 @@ export default class Logging extends Component {
                             presets: tempArray,
                             completedCards: cardTempArray,
                             completedCount: this.state.completedCount+1
+                        })
+                    }
+                    if(responseJson.result.supplements.length>0){
+                        let supplements = responseJson.result.supplements
+                        let cardTempArray = this.state.supplements
+                        for(var i in supplements){
+                            let tempArray = this.state.products
+                            for(var e in tempArray){
+                                if(tempArray[e].id == supplements[i].product_id){
+                                    console.log(tempArray[e].id)
+                                }
+                            }
+                            cardTempArray.push({
+                                name: supplements[i].product_name,
+                                is_taken: supplements[i].is_taken
+                            })
+                        }
+                        this.setState({
+                            supplements: cardTempArray
                         })
                     }
                     setTimeout(() => {
@@ -303,7 +326,13 @@ export default class Logging extends Component {
         });
         var ProductCards = this.state.products.map((b,i)=>{
             return(
+                b.enabled &&
                 <ProductCard key={i} id={b.id} name={b.name} outOf={b.outOf} dosage={b.dosage} />
+            )
+        })
+        var CompletedProducts = this.state.supplements.map((b,i)=>{
+            return(
+                <CompletedProduct key={i} name={b.name} is_taken={b.is_taken}/>
             )
         })
         return(
@@ -326,6 +355,7 @@ export default class Logging extends Component {
                     <View style={styles.completed}>
                         <Text style={styles.completedText}>Completed Activities</Text>
                     </View>
+                    { CompletedProducts }
                     { CompletedCards }
                     <View style={styles.bottomPadding}></View>
                 </ScrollView>

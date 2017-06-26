@@ -48,7 +48,7 @@ export default class Logging extends Component {
             supplements: [],
             fourTwelveEnabled: false,
             activityHappening: false,
-            incompleteDays: this.props.screenProps.incompleteDays
+            incompleteDays: []
         };
     }
 
@@ -69,7 +69,8 @@ export default class Logging extends Component {
     componentWillReceiveProps(nextProps){
         this.getProducts(nextProps.screenProps.products,true)
         this.setState({
-            fourTwelveEnabled: nextProps.screenProps.fourTwelve
+            fourTwelveEnabled: nextProps.screenProps.fourTwelve,
+            incompleteDays: nextProps.screenProps.incompleteDays
         })
     }
 

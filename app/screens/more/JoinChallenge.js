@@ -146,7 +146,8 @@ const styles = StyleSheet.create({
   },
     loginBtn: {
         paddingHorizontal: 10,
-        paddingVertical: 15
+        paddingVertical: 15,
+        paddingTop: 20
     },
     inputText: {
         color: "black",
@@ -180,7 +181,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         flexDirection: "row",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        height: (Platform.OS === 'ios') ? 60 : 0,
     },
     changePasswordText: {
         fontSize: 17,

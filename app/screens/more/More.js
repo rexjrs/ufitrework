@@ -22,6 +22,8 @@ export default class More extends Component {
 
     componentWillMount(){
         let result = this.props.screenProps.fourTwelve;
+        console.log('-----------')
+        console.log(result)
         if(result === "true"){
             result = true
         }else{
@@ -46,6 +48,7 @@ export default class More extends Component {
         AsyncStorage.removeItem('profileImage');
         AsyncStorage.removeItem('selectedProducts');
         AsyncStorage.removeItem('fourTwelve');
+        AsyncStorage.removeItem('incompleteDays');
         setTimeout(() => {
             GoogleSignin.signOut()
             .then(() => {

@@ -9,7 +9,8 @@ ActivityIndicator,
 Modal,
 TouchableOpacity,
 Platform,
-Alert
+Alert,
+AsyncStorage
 } from 'react-native';
 import moment from 'moment'
 import Progress from './Progress'
@@ -45,12 +46,22 @@ export default class Logging extends Component {
             products: [],
             originalProduct: this.props.screenProps.products,
             supplements: [],
-            fourTwelveEnabled: this.props.screenProps.fourTwelve,
-            activityHappening: false
+            fourTwelveEnabled: false,
+            activityHappening: false,
+            incompleteDays: this.props.screenProps.incompleteDays
         };
     }
 
     componentWillMount(){
+        let result = this.props.screenProps.fourTwelve
+        if(result === "true"){
+            result = true
+        }else{
+            result = false
+        }
+        this.setState({
+            fourTwelveEnabled: result
+        })
         this.fetchDay(moment(this.state.today).format())
         this.getProducts()
     }
@@ -206,6 +217,31 @@ export default class Logging extends Component {
         },this.getProducts(this.props.screenProps.products,true))
     }
 
+    figureIfIncomplete(){
+        let incompleteTemp = this.state.incompleteDays
+        if(this.state.completedCount < 5){
+            let found = false
+            for(var i in incompleteTemp){
+                if(incompleteTemp[i] == this.state.stateDate){
+                    found = true
+                }
+            }
+            if(!found){
+                incompleteTemp.push(this.state.stateDate)
+            }
+        }else{
+            for(var i in incompleteTemp){
+                if(incompleteTemp[i] == this.state.stateDate){
+                    incompleteTemp.splice(i,1);
+                }
+            }
+        }
+        AsyncStorage.setItem('incompleteDays',JSON.stringify(incompleteTemp));
+        this.setState({
+            incompleteDays: incompleteTemp
+        })
+    }
+
     fetchDay(date,force){
         date = moment(date).format('YYYY-MM-DD')
         this.setState({
@@ -229,6 +265,7 @@ export default class Logging extends Component {
                     if(this.state.dayHistory[i].fourTwelveLogged){
                         completedCounter = completedCounter+1
                     }
+                    this.figureIfIncomplete()
                     this.setState({
                         completedCards: this.state.dayHistory[i].data,
                         presets: this.state.dayHistory[i].presets,
@@ -249,7 +286,6 @@ export default class Logging extends Component {
             .then((response) => {
                 this.setState({loading: false})
                 let responseJson = JSON.parse(response._bodyInit);
-                console.log(responseJson);
                 if(responseJson.status == "ok"){
                     if(responseJson.result.breakfast){
                         let tempArray = this.state.presets
@@ -399,6 +435,7 @@ export default class Logging extends Component {
                                 fourTwelveTaken: this.state.fourTwelveTaken
                             })
                         }
+                        this.figureIfIncomplete()
                         this.setState({
                             dayHistory: tempArray,
                             activityHappening: false,
@@ -510,7 +547,7 @@ export default class Logging extends Component {
         })
         return(
             <View style={styles.container}>
-                <Week fetchDay={this.fetchDay.bind(this)} activityHappening={this.state.activityHappening}/>
+                <Week fetchDay={this.fetchDay.bind(this)} activityHappening={this.state.activityHappening} incompleteDays={this.state.incompleteDays}/>
                 <ScrollView>
                     <Progress screenProps={this.props.screenProps} completedCount={this.state.completedCount}/>
                     {this.state.loading &&

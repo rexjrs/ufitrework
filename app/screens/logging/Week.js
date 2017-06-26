@@ -16,7 +16,7 @@ export default class FoodCard extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-
+            incompleteDays: this.props.incompleteDays
         };
     }
 
@@ -50,10 +50,59 @@ export default class FoodCard extends Component {
                 }  
             }
         }
-
-
         });
+    }
 
+    componentWillReceiveProps(nextProps){
+        if(this.state.incompleteDays != nextProps.incompleteDays){
+            this.setState({
+                incompleteDays: nextProps.incompleteDays
+            },this.getIndicator)
+        }
+        this.getIndicator()
+    }
+
+    getIndicator(){
+        let mondayFound = false
+        let tuesdayFound = false
+        let wednesdayFound = false
+        let thursdayFound = false
+        let fridayFound = false
+        let saturdayFound = false
+        let sundayFound = false
+        let incompleteDays = this.state.incompleteDays
+        for(var i in incompleteDays){
+            if(incompleteDays[i] == moment(this.state.mondayReal).format('YYYY-MM-DD')){
+                mondayFound = true
+            }   
+            if(incompleteDays[i] == moment(this.state.tuesdayReal).format('YYYY-MM-DD')){
+                tuesdayFound = true    
+            }
+            if(incompleteDays[i] == moment(this.state.wednesdayReal).format('YYYY-MM-DD')){
+                wednesdayFound = true
+            }
+            if(incompleteDays[i] == moment(this.state.thursdayReal).format('YYYY-MM-DD')){
+                thursdayFound = true
+            }
+            if(incompleteDays[i] == moment(this.state.fridayReal).format('YYYY-MM-DD')){
+                fridayFound = true
+            }
+            if(incompleteDays[i] == moment(this.state.saturdayReal).format('YYYY-MM-DD')){
+                saturdayFound = true
+            }
+            if(incompleteDays[i] == moment(this.state.sundayReal).format('YYYY-MM-DD')){
+                sundayFound = true
+            }
+        }
+        this.setState({
+            mondayFound: mondayFound,
+            tuesdayFound: tuesdayFound,
+            wednesdayFound: wednesdayFound,
+            thursdayFound: thursdayFound,
+            fridayFound: fridayFound,
+            saturdayFound: saturdayFound,
+            sundayFound: sundayFound
+        })
     }
 
     changeWeek(period){
@@ -110,7 +159,7 @@ export default class FoodCard extends Component {
             friday: moment(monday).add(4,'days').format('ddd'), fridayDD: moment(monday).add(4,'days').format('DD'), fridayReal: moment(monday).add(4,'days'),
             saturday: moment(monday).add(5,'days').format('ddd'), saturdayDD: moment(monday).add(5,'days').format('DD'), saturdayReal: moment(monday).add(5,'days'),
             sunday: moment(monday).add(6,'days').format('ddd'), sundayDD: moment(monday).add(6,'days').format('DD'), sundayReal: moment(monday).add(6,'days'),
-        })
+        },this.getIndicator)
     }
 
     fetchDayCallback(value,day){
@@ -126,42 +175,77 @@ export default class FoodCard extends Component {
                 <View style={styles.containerRow} {...this._panResponder.panHandlers}> 
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.mondayReal,this.state.monday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.monday}</Text>
+                        {this.state.mondayFound &&
+                        <View style={styles.indicator}>
+                            <View style={styles.innerIndicator}></View>
+                        </View>
+                        }
                         <View style={{backgroundColor: this.state.MonCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.MonColor}]}>{this.state.mondayDD}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.tuesdayReal,this.state.tuesday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.tuesday}</Text>
+                        {this.state.tuesdayFound &&
+                        <View style={styles.indicator}>
+                            <View style={styles.innerIndicator}></View>
+                        </View>
+                        }
                         <View style={{backgroundColor: this.state.TueCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.TueColor}]}>{this.state.tuesdayDD}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.wednesdayReal,this.state.wednesday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.wednesday}</Text>
+                        {this.state.wednesdayFound &&
+                        <View style={styles.indicator}>
+                            <View style={styles.innerIndicator}></View>
+                        </View>
+                        }
                         <View style={{backgroundColor: this.state.WedCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.WedColor}]}>{this.state.wednesdayDD}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.thursdayReal,this.state.thursday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.thursday}</Text>
+                        {this.state.thursdayFound &&
+                        <View style={styles.indicator}>
+                            <View style={styles.innerIndicator}></View>
+                        </View>
+                        }
                         <View style={{backgroundColor: this.state.ThuCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.ThuColor}]}>{this.state.thursdayDD}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.fridayReal,this.state.friday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.friday}</Text>
+                        {this.state.fridayFound &&
+                        <View style={styles.indicator}>
+                            <View style={styles.innerIndicator}></View>
+                        </View>
+                        }
                         <View style={{backgroundColor: this.state.FriCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.FriColor}]}>{this.state.fridayDD}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.saturdayReal,this.state.saturday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.saturday}</Text>
+                        {this.state.saturdayFound &&
+                        <View style={styles.indicator}>
+                            <View style={styles.innerIndicator}></View>
+                        </View>
+                        }
                         <View style={{backgroundColor: this.state.SatCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.SatColor}]}>{this.state.saturdayDD}</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.sundayReal,this.state.sunday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.sunday}</Text>
+                        {this.state.sundayFound &&
+                        <View style={styles.indicator}>
+                            <View style={styles.innerIndicator}></View>
+                        </View>
+                        }
                         <View style={{backgroundColor: this.state.SunCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.SunColor}]}>{this.state.sundayDD}</Text>
                          </View>
@@ -180,6 +264,22 @@ const styles = StyleSheet.create({
         height: (Platform.OS === 'ios') ? 75 : 65,
         backgroundColor: "#1CBCD4",
         paddingTop: (Platform.OS === 'ios') ? 30 : 15,
+    },
+    indicator:{
+        position: "absolute",
+        width: 8,
+        height: 8,
+        backgroundColor: "white",
+        borderRadius: 20,
+        right: window.width*0.03,
+        justifyContent: "center",
+        alignItems: "center"
+    },  
+    innerIndicator:{
+        width: 5,
+        height: 5,
+        backgroundColor: "#FF9800",
+        borderRadius: 18
     },
     containerRow: {
         flexDirection: "row"

@@ -59,7 +59,7 @@ class Index extends Component {
     }
 
     getData(){
-        AsyncStorage.multiGet(['username','firstName','profileImage','challenge','selectedProducts','fourTwelve'], (err, keys) => {
+        AsyncStorage.multiGet(['username','firstName','profileImage','challenge','selectedProducts','fourTwelve','incompleteDays'], (err, keys) => {
             if(keys[0][1] == null){
                 this.setState({loaded: true})
             }else{
@@ -83,6 +83,15 @@ class Index extends Component {
                 }else{
                     this.setState({
                         fourTwelve: keys[5][1]
+                    })
+                }
+                if(keys[6][1] == null){
+                    this.setState({
+                        incompleteDays: []
+                    })
+                }else{
+                    this.setState({
+                        incompleteDays: JSON.parse(keys[6][1])
                     })
                 }
             }
@@ -141,6 +150,7 @@ class Index extends Component {
                         challengeID: this.state.challengeID,
                         products: this.state.products,
                         fourTwelve: this.state.fourTwelve,
+                        incompleteDays: this.state.incompleteDays,
                         setFourTwelve: this.setFourTwelve.bind(this),
                         setProducts: this.setProducts.bind(this),
                         logout: this.logout.bind(this)

@@ -24,6 +24,7 @@ export default class ProductCard extends Component {
     constructor(props) {
         super(props);
         this.state = { 
+            loading: false
         };
     }
 
@@ -35,25 +36,6 @@ export default class ProductCard extends Component {
 
     }
 
-    deleteSupplement(){
-        this.props.activityHappening(true)
-        this.setState({
-            loading: true
-        })
-        let params ={ 
-            supplement_id: this.props.real_id
-        }
-        fetch(`${APIURL3}/deletesupplement`, {
-            method: 'POST',
-            body: JSON.stringify(params),
-            headers: HEADERPARAM3
-        })
-        .then((response) => {
-            this.props.activityHappening(false)
-            this.props.getProduct(this.props.stateDate)
-        })  
-    }
-
     render() {
         return (
             <View style={styles.container}>
@@ -61,8 +43,9 @@ export default class ProductCard extends Component {
                     <View style={styles.cellContainer}>
                         <View style={styles.headerCell}>
                             <View style={{flex: 0.5,marginTop: 25}}>
-                                <Text style={styles.headerText}>{this.props.name}</Text>
+                                <Text style={styles.headerText}>4-4-12</Text>
                             </View>
+                            {!this.state.loading &&
                             <TouchableOpacity style={styles.headerIcon}>
                                 {this.props.is_taken < 1 &&
                                 <Icon name="ios-close-circle" type="ionicon" size={35} color="#E91E63" />
@@ -71,6 +54,8 @@ export default class ProductCard extends Component {
                                 <Icon name="ios-close-circle" type="ionicon" size={35} color="#CCC" />
                                 }
                             </TouchableOpacity>
+                            }
+                            {!this.state.loading &&
                             <TouchableOpacity style={styles.headerIcon}>
                                 {this.props.is_taken > 0 &&
                                 <Icon name="ios-checkmark-circle" type="ionicon" size={35} color="#8BC34A" />
@@ -78,10 +63,6 @@ export default class ProductCard extends Component {
                                 {this.props.is_taken < 1 &&
                                 <Icon name="ios-checkmark-circle" type="ionicon" size={35} color="#CCC" />
                                 }
-                            </TouchableOpacity>
-                            {!this.state.loading &&
-                            <TouchableOpacity onPress={this.deleteSupplement.bind(this)} style={styles.headerIcon}>
-                                <Icon name="ios-trash" type="ionicon" size={35} color="gray" />
                             </TouchableOpacity>
                             }
                             {this.state.loading &&

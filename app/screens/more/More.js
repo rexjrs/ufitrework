@@ -7,11 +7,31 @@ Dimensions,
 TouchableOpacity,
 StatusBar,
 AsyncStorage,
-Platform
+Platform,
+Switch
 } from 'react-native';
 import {GoogleSignin} from 'react-native-google-signin';
 
 export default class More extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+            fourTwelve: false
+        }
+    }
+
+    componentWillMount(){
+        let result = this.props.screenProps.fourTwelve;
+        if(result === "true"){
+            result = true
+        }else{
+            result = false
+        }
+        this.setState({
+            fourTwelve: result
+        })
+    }
+
     logout(){
         AsyncStorage.removeItem('loginType');
         AsyncStorage.removeItem('username');
@@ -25,6 +45,7 @@ export default class More extends Component {
         AsyncStorage.removeItem('gender');
         AsyncStorage.removeItem('profileImage');
         AsyncStorage.removeItem('selectedProducts');
+        AsyncStorage.removeItem('fourTwelve');
         setTimeout(() => {
             GoogleSignin.signOut()
             .then(() => {
@@ -35,6 +56,14 @@ export default class More extends Component {
             });
             this.props.screenProps.logout()
         }, 1000)
+    }
+
+    setFourTwelve(value){
+        this.setState({
+            fourTwelve: value
+        })
+        this.props.screenProps.setFourTwelve(value)
+        AsyncStorage.setItem('fourTwelve', value.toString());
     }
     
     render() {
@@ -64,6 +93,17 @@ export default class More extends Component {
                 <TouchableOpacity onPress={()=>this.props.navigation.navigate('JoinChallenge')} style={styles.cellContainer}>
                     <Text style={styles.cellText}>Join Challenges</Text>
                 </TouchableOpacity>
+                <View style={[styles.cellContainer, {flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}]}>
+                    <View style={{flex: 0.5}}>
+                        <Text style={styles.cellText}>4-4-12 goal:</Text>
+                    </View>
+                    <View style={{flex: 0.5, alignItems: "flex-end"}}>
+                        <Switch
+                            value={this.state.fourTwelve}
+                            onValueChange={(value)=>this.setFourTwelve(value)}
+                        />
+                    </View>
+                </View>
                 <TouchableOpacity style={styles.cellContainer} onPress={this.logout.bind(this)}>
                     <Text style={styles.cellText}>Logout</Text>
                 </TouchableOpacity>

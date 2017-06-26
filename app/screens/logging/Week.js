@@ -113,47 +113,55 @@ export default class FoodCard extends Component {
         })
     }
 
+    fetchDayCallback(value,day){
+        console.log(this.props.activityHappening)
+        if(!this.props.activityHappening){
+            this.props.fetchDay(value)
+            this.selectedDay(day,value)
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.containerRow} {...this._panResponder.panHandlers}> 
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.monday,this.state.mondayReal);this.props.fetchDay(this.state.mondayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.mondayReal,this.state.monday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.monday}</Text>
                         <View style={{backgroundColor: this.state.MonCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.MonColor}]}>{this.state.mondayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.tuesday,this.state.tuesdayReal);this.props.fetchDay(this.state.tuesdayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.tuesdayReal,this.state.tuesday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.tuesday}</Text>
                         <View style={{backgroundColor: this.state.TueCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.TueColor}]}>{this.state.tuesdayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.wednesday,this.state.wednesdayReal);this.props.fetchDay(this.state.wednesdayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.wednesdayReal,this.state.wednesday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.wednesday}</Text>
                         <View style={{backgroundColor: this.state.WedCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.WedColor}]}>{this.state.wednesdayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.thursday,this.state.thursdayReal);this.props.fetchDay(this.state.thursdayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.thursdayReal,this.state.thursday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.thursday}</Text>
                         <View style={{backgroundColor: this.state.ThuCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.ThuColor}]}>{this.state.thursdayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.friday,this.state.fridayReal);this.props.fetchDay(this.state.fridayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.fridayReal,this.state.friday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.friday}</Text>
                         <View style={{backgroundColor: this.state.FriCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.FriColor}]}>{this.state.fridayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.saturday,this.state.saturdayReal);this.props.fetchDay(this.state.saturdayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.saturdayReal,this.state.saturday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.saturday}</Text>
                         <View style={{backgroundColor: this.state.SatCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.SatColor}]}>{this.state.saturdayDD}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{this.selectedDay(this.state.sunday,this.state.sundayReal);this.props.fetchDay(this.state.sundayReal)}} style={styles.day}>
+                    <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.sundayReal,this.state.sunday)}} style={styles.day}>
                         <Text style={styles.dayText}>{this.state.sunday}</Text>
                         <View style={{backgroundColor: this.state.SunCircleColor, borderRadius: 10, overflow: "hidden",padding: 2}}>
                             <Text style={[styles.dateText,{color: this.state.SunColor}]}>{this.state.sundayDD}</Text>

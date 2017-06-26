@@ -37,6 +37,7 @@ export default class ProductCard extends Component {
     }
 
     logSupplement(value){
+        this.props.activityHappening(true)
         this.setState({
             loading: true
         })
@@ -52,6 +53,7 @@ export default class ProductCard extends Component {
             headers: HEADERPARAM3
         })
         .then((response) => {
+            this.props.activityHappening(false)
             let responseJson = JSON.parse(response._bodyInit);
             if(responseJson.status == "ok"){
                 console.log('ok')

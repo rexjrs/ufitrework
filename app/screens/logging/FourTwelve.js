@@ -24,6 +24,7 @@ export default class ProductCard extends Component {
     constructor(props) {
         super(props);
         this.state = { 
+            loading: false
         };
     }
 
@@ -35,23 +36,23 @@ export default class ProductCard extends Component {
 
     }
 
-    deleteSupplement(){
+    completeFourTwelve(value){
         this.props.activityHappening(true)
-        this.setState({
-            loading: true
-        })
-        let params ={ 
-            supplement_id: this.props.real_id
+        this.setState({loading: true})
+        let params = {
+            username: this.props.username,
+            is_taken: value,
+            date: this.props.stateDate
         }
-        fetch(`${APIURL3}/deletesupplement`, {
+        fetch(`${APIURL3}/fourfourtwelveinput`, {
             method: 'POST',
             body: JSON.stringify(params),
             headers: HEADERPARAM3
         })
         .then((response) => {
             this.props.activityHappening(false)
-            this.props.getProduct(this.props.stateDate)
-        })  
+            this.props.updateFourTwelve(value)
+        });
     }
 
     render() {
@@ -61,27 +62,16 @@ export default class ProductCard extends Component {
                     <View style={styles.cellContainer}>
                         <View style={styles.headerCell}>
                             <View style={{flex: 0.5,marginTop: 25}}>
-                                <Text style={styles.headerText}>{this.props.name}</Text>
+                                <Text style={styles.headerText}>4-4-12</Text>
                             </View>
-                            <TouchableOpacity style={styles.headerIcon}>
-                                {this.props.is_taken < 1 &&
-                                <Icon name="ios-close-circle" type="ionicon" size={35} color="#E91E63" />
-                                }
-                                {this.props.is_taken > 0 &&
-                                <Icon name="ios-close-circle" type="ionicon" size={35} color="#CCC" />
-                                }
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.headerIcon}>
-                                {this.props.is_taken > 0 &&
-                                <Icon name="ios-checkmark-circle" type="ionicon" size={35} color="#8BC34A" />
-                                }
-                                {this.props.is_taken < 1 &&
-                                <Icon name="ios-checkmark-circle" type="ionicon" size={35} color="#CCC" />
-                                }
-                            </TouchableOpacity>
                             {!this.state.loading &&
-                            <TouchableOpacity onPress={this.deleteSupplement.bind(this)} style={styles.headerIcon}>
-                                <Icon name="ios-trash" type="ionicon" size={35} color="gray" />
+                            <TouchableOpacity onPress={()=>this.completeFourTwelve("0")} style={styles.headerIcon}>
+                                <Icon name="ios-close-circle" type="ionicon" size={35} color="#E91E63" />
+                            </TouchableOpacity>
+                            }
+                            {!this.state.loading &&
+                            <TouchableOpacity onPress={()=>this.completeFourTwelve("1")} style={styles.headerIcon}>
+                                <Icon name="ios-checkmark-circle" type="ionicon" size={35} color="#8BC34A" />
                             </TouchableOpacity>
                             }
                             {this.state.loading &&

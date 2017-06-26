@@ -17,7 +17,9 @@ import FoodCard from './FoodCard'
 import CompletedCard from './CompletedCard'
 import ProductCard from './ProductCard'
 import Week from './Week'
+import FourTwelve from './FourTwelve'
 import CompletedProduct from './CompletedProduct'
+import CompletedFourTwelve from './CompletedFourTwelve'
 
 var GlobalToday = new Date();
 
@@ -42,7 +44,9 @@ export default class Logging extends Component {
             selectedPost: null,
             products: [],
             originalProduct: this.props.screenProps.products,
-            supplements: []
+            supplements: [],
+            fourTwelveEnabled: this.props.screenProps.fourTwelve,
+            activityHappening: false
         };
     }
 
@@ -53,6 +57,40 @@ export default class Logging extends Component {
 
     componentWillReceiveProps(nextProps){
         this.getProducts(nextProps.screenProps.products,true)
+        this.setState({
+            fourTwelveEnabled: nextProps.screenProps.fourTwelve
+        })
+    }
+
+    activityHappening(value){
+        this.setState({
+            activityHappening: value
+        })
+    }
+
+    updateFourTwelve(value){
+        if(value == "1"){
+            this.setState({
+                fourTwelveTaken: true
+            })
+        }else{
+            this.setState({
+                fourTwelveTaken: false
+            })
+        }
+        this.setState({
+            fourTwelveLogged: true
+        },this.setFourTwelveDayHistory)
+    }
+
+    setFourTwelveDayHistory(){
+        let tempArray = this.state.dayHistory
+        for(var i in tempArray){
+            if(tempArray[i].date == this.state.stateDate){
+                tempArray[i].fourTwelveLogged = true,
+                tempArray[i].fourTwelveTaken = this.state.fourTwelveTaken
+            }
+        }
     }
 
     getProducts(value,update){
@@ -116,12 +154,13 @@ export default class Logging extends Component {
     }
 
     getProduct(date){
-        console.log('ioran')
+            this.setState({activityHappening: true})
             fetch(`${APIURL3}/fetchdailyresources3?username=${this.state.username}&date=${date}`, {
                 method: 'GET',
                 headers: HEADERPARAM3
             })
             .then((response) => {
+                this.setState({activityHappening: false})
                 let responseJson = JSON.parse(response._bodyInit);
                 if(responseJson.status == "ok"){
                     if(responseJson.result.supplements.length>0){
@@ -132,10 +171,14 @@ export default class Logging extends Component {
                     }else{
                         this.setState({
                             supplements: []
-                        },this.getProducts(this.props.screenProps.products,true))
+                        },this.getProductsCallback)
                     }
                 }
             })
+    }
+
+    getProductsCallback(){
+        this.getProducts(this.props.screenProps.products,true)
     }
 
     setSupplements(){
@@ -186,13 +229,15 @@ export default class Logging extends Component {
                         completedCards: this.state.dayHistory[i].data,
                         presets: this.state.dayHistory[i].presets,
                         supplements: this.state.dayHistory[i].supplements,
-                        completedCount: this.state.dayHistory[i].data.length
+                        completedCount: this.state.dayHistory[i].data.length,
+                        fourTwelveLogged: this.state.dayHistory[i].fourTwelveLogged,
+                        fourTwelveTaken: this.state.dayHistory[i].fourTwelveTaken
                     })
                 }
             }
         }
         if(!found){
-            this.setState({loading: true})
+            this.setState({loading: true,activityHappening: true})
             fetch(`${APIURL3}/fetchdailyresources3?username=${this.state.username}&date=${date}`, {
                 method: 'GET',
                 headers: HEADERPARAM3
@@ -308,6 +353,24 @@ export default class Logging extends Component {
                             supplements: cardTempArray
                         },this.setTaken)
                     }
+                    if(responseJson.result.four_four_twelve){
+                        if(responseJson.result.four_four_twelve == 1){
+                            this.setState({
+                                fourTwelveTaken: true
+                            })
+                        }else{
+                            this.setState({
+                                fourTwelveTaken: false
+                            })
+                        }
+                        this.setState({
+                            fourTwelveLogged: true
+                        })
+                    }else{
+                        this.setState({
+                            fourTwelveLogged: false
+                        })
+                    }
                     setTimeout(() => {
                         let tempArray = this.state.dayHistory
                         let found = false
@@ -326,11 +389,14 @@ export default class Logging extends Component {
                                 date: date,
                                 data: this.state.completedCards,
                                 presets: this.state.presets,
-                                supplements: this.state.supplements
+                                supplements: this.state.supplements,
+                                fourTwelveLogged: this.state.fourTwelveLogged,
+                                fourTwelveTaken: this.state.fourTwelveTaken
                             })
                         }
                         this.setState({
-                            dayHistory: tempArray
+                            dayHistory: tempArray,
+                            activityHappening: false
                         })
                     },50)
                 }
@@ -402,17 +468,17 @@ export default class Logging extends Component {
         var ProductCards = this.state.products.map((b,i)=>{
             return(
                 b.enabled &&
-                <ProductCard key={i} id={b.id} name={b.name} outOf={b.outOf} dosage={b.dosage} screenProps={this.props.screenProps} stateDate={this.state.stateDate} getProduct={this.getProduct.bind(this)}/>
+                <ProductCard key={i} id={b.id} name={b.name} outOf={b.outOf} dosage={b.dosage} screenProps={this.props.screenProps} stateDate={this.state.stateDate} getProduct={this.getProduct.bind(this)} activityHappening={this.activityHappening.bind(this)}/>
             )
         })
         var CompletedProducts = this.state.supplements.map((b,i)=>{
             return(
-                <CompletedProduct key={i} name={b.name} is_taken={b.is_taken} real_id={b.real_id} stateDate={this.state.stateDate} getProduct={this.getProduct.bind(this)}/>
+                <CompletedProduct key={i} name={b.name} is_taken={b.is_taken} real_id={b.real_id} stateDate={this.state.stateDate} getProduct={this.getProduct.bind(this)} activityHappening={this.activityHappening.bind(this)}/>
             )
         })
         return(
             <View style={styles.container}>
-                <Week fetchDay={this.fetchDay.bind(this)}/>
+                <Week fetchDay={this.fetchDay.bind(this)} activityHappening={this.state.activityHappening}/>
                 <ScrollView>
                     <Progress screenProps={this.props.screenProps} completedCount={this.state.completedCount}/>
                     {this.state.loading &&
@@ -427,10 +493,17 @@ export default class Logging extends Component {
                     }
                     { FoodCards }
                     { ProductCards }
+                    {this.state.fourTwelveEnabled &&
+                        !this.state.fourTwelveLogged &&
+                        <FourTwelve username={this.state.username} stateDate={this.state.stateDate} updateFourTwelve={this.updateFourTwelve.bind(this)} activityHappening={this.activityHappening.bind(this)}/>
+                    }
                     <View style={styles.completed}>
                         <Text style={styles.completedText}>Completed Activities</Text>
                     </View>
                     { CompletedProducts }
+                    {this.state.fourTwelveLogged &&
+                    <CompletedFourTwelve is_taken={this.state.fourTwelveTaken}/>
+                    }
                     { CompletedCards }
                     <View style={styles.bottomPadding}></View>
                 </ScrollView>

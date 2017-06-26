@@ -225,11 +225,15 @@ export default class Logging extends Component {
             for(var i in this.state.dayHistory){
                 if(this.state.dayHistory[i].date === date){
                     found = true
+                    let completedCounter = this.state.dayHistory[i].data.length
+                    if(this.state.dayHistory[i].fourTwelveTaken){
+                        completedCounter = completedCounter+1
+                    }
                     this.setState({
                         completedCards: this.state.dayHistory[i].data,
                         presets: this.state.dayHistory[i].presets,
                         supplements: this.state.dayHistory[i].supplements,
-                        completedCount: this.state.dayHistory[i].data.length,
+                        completedCount: completedCounter,
                         fourTwelveLogged: this.state.dayHistory[i].fourTwelveLogged,
                         fourTwelveTaken: this.state.dayHistory[i].fourTwelveTaken
                     })
@@ -364,7 +368,8 @@ export default class Logging extends Component {
                             })
                         }
                         this.setState({
-                            fourTwelveLogged: true
+                            fourTwelveLogged: true,
+                            completedCount: this.state.completedCount+1
                         })
                     }else{
                         this.setState({

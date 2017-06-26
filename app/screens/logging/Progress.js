@@ -53,6 +53,10 @@ export default class Progress extends Component {
                 this.setState({
                     colorBar: '#8BC34A',
                 })
+            }else{
+                this.setState({
+                    colorBar: '#FF9800',
+                })
             }
         }
         if(this.props.noLog != nextProps.noLog){

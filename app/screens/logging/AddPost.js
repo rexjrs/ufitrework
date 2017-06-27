@@ -71,7 +71,6 @@ export default class FoodCard extends Component {
             compressImageMaxWidth: 2000,
             includeBase64: true
         }).then(image => {
-            console.log(image.path)
             this.setState({
                 imageSource: image.data,
                 imageDisplay: {uri: image.path},
@@ -79,7 +78,6 @@ export default class FoodCard extends Component {
             })
         })
         .catch(e => {
-            console.log(e)
             this.setState({visible: false})
         });
     }
@@ -165,15 +163,11 @@ export default class FoodCard extends Component {
         })
         .then((response) => {
             let responseJson = JSON.parse(response._bodyInit);
-            console.log(responseJson)
             if(responseJson.status == "ok"){
-                console.log('ok')
                 let id = responseJson.post.id;
                 if(this.state.imageSource){
-                    console.log('up')
                     this.uploadImage(id);
                 }else{
-                    console.log('callback')
                     this.callback()
                 }
             }
@@ -293,6 +287,9 @@ export default class FoodCard extends Component {
                             }
                             {this.state.icon === "exercise" &&
                             <Image source={require('../../assets/icons/exercise.png')} style={{width: 30, height: 30}}/>
+                            }
+                            {this.state.icon === "snack" &&
+                            <Image source={require('../../assets/icons/snack.png')} style={{width: 30, height: 30}}/>
                             }
                             <Text style={styles.icon}>{this.state.cardType}</Text>
                         </View>

@@ -46,8 +46,11 @@ export default class FoodCard extends Component {
                             {this.props.cardType === "Dinner" &&
                             <Image source={require('../../assets/icons/dinner.png')} style={{width: 30, height: 30}}/>
                             }
-                            {this.state.cardType === "Exercise" &&
+                            {this.props.cardType === "Exercise" &&
                             <Image source={require('../../assets/icons/exercise.png')} style={{width: 30, height: 30}}/>
+                            }
+                            {this.props.cardType === "Snack" &&
+                            <Image source={require('../../assets/icons/snack.png')} style={{width: 30, height: 30}}/>
                             }
                             <Text style={styles.icon}>{this.props.cardType}</Text>
                         </View>
@@ -82,7 +85,7 @@ const styles = StyleSheet.create({
     container: {
         marginTop: 7,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
     image: {
         width: window.width*0.9,
@@ -106,7 +109,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
         borderWidth: (Platform.OS === 'ios') ? 0 : 0.2,
-        borderColor: "#CCC"
+        borderColor: "#CCC",
+        backgroundColor: "white"
     },
     header: {
         flexDirection: "row",

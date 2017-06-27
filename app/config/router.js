@@ -22,6 +22,7 @@ import Team from '../screens/team/Team'
 import AddPost from '../screens/logging/AddPost'
 import Product from '../screens/more/Product'
 import JoinChallenge from '../screens/more/JoinChallenge'
+import AddSupplement from '../screens/logging/AddSupplement'
 
 // Login Page Stack
 export const LoginNav = StackNavigator({
@@ -102,6 +103,12 @@ export const LoggingStack = StackNavigator({
     },
     AddPost: {
         screen: AddPost,
+        navigationOptions: {
+            header: false
+        }
+    },
+    AddSupplement: {
+        screen: AddSupplement,
         navigationOptions: {
             header: false
         }

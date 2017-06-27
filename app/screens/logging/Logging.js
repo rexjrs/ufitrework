@@ -176,6 +176,8 @@ export default class Logging extends Component {
                 this.setState({activityHappening: false})
                 let responseJson = JSON.parse(response._bodyInit);
                 if(responseJson.status == "ok"){
+                    console.log('-==========')
+                    console.log(responseJson)
                     if(responseJson.result.supplements.length>0){
                         this.setState({
                             supplements: [],
@@ -395,6 +397,26 @@ export default class Logging extends Component {
                             supplements: cardTempArray
                         },this.setTaken)
                     }
+                    if(responseJson.result.snacks.length>0){
+                        let snacks = responseJson.result.snacks
+                        let cardTempArray = this.state.completedCards
+                        for(var i in snacks){
+                            let image = snacks[i].photos[0]
+                            if(!snacks[i].photos[0]){
+                                image = '2017061815314500000719.jpg'
+                            }
+                            cardTempArray.push({
+                                cardType: "Snack",
+                                date: date,
+                                description: snacks[i].description,
+                                image: image,
+                                id: snacks[i].meal_id
+                            })
+                        }
+                        this.setState({
+                            completedCards: cardTempArray
+                        })
+                    }
                     if(responseJson.result.four_four_twelve){
                         if(responseJson.result.four_four_twelve == 1){
                             this.setState({
@@ -550,7 +572,7 @@ export default class Logging extends Component {
         return(
             <View style={styles.container}>
                 <Week fetchDay={this.fetchDay.bind(this)} activityHappening={this.state.activityHappening} incompleteDays={this.state.incompleteDays}/>
-                <ScrollView>
+                <ScrollView style={{backgroundColor: "#F2F2F2"}}>
                     <Progress screenProps={this.props.screenProps} completedCount={this.state.completedCount}/>
                     {this.state.loading &&
                     <View style={styles.loading}>
@@ -583,11 +605,15 @@ export default class Logging extends Component {
                             <Image source={require('../../assets/icons/exercise.png')} style={{width: 30, height: 30}} />
                             <Text style={{fontSize: 13, fontWeight: "400", color: "gray"}}>Add Exercise</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.bottomButtons, {marginHorizontal: 10}]}>
+                        <TouchableOpacity style={[styles.bottomButtons, {marginHorizontal: 10}]}
+                            onPress={()=>this.props.navigation.navigate('AddPost',{ cardType: 'Snack', icon: 'snack', date: this.state.stateDate, action: 'add', screenProps: this.props.screenProps, fetchDay: this.fetchDay.bind(this)})}
+                        >
                             <Image source={require('../../assets/icons/snack.png')} style={{width: 30, height: 30}} />
                             <Text style={{fontSize: 13, fontWeight: "400", color: "gray"}}>Add Snack</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.bottomButtons, {marginRight: 10}]}>
+                        <TouchableOpacity style={[styles.bottomButtons, {marginRight: 10}]}
+                            onPress={()=>this.props.navigation.navigate('AddSupplement',{screenProps: this.props.screenProps, getProduct: this.getProduct.bind(this), stateDate: this.state.stateDate})}
+                        >
                             <Image source={require('../../assets/icons/supplements.png')} style={{width: 30, height: 30}} />
                             <Text style={{fontSize: 13, fontWeight: "400", color: "gray"}}>Add Supplement</Text>
                         </TouchableOpacity>

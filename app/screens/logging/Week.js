@@ -107,6 +107,11 @@ export default class FoodCard extends Component {
 
     changeWeek(period){
         let week;
+        this.setState({
+            MonColorTop: "white",TueColorTop: "white",WedColorTop: "white",ThuColorTop: "white",FriColorTop: "white",SatColorTop: "white",SunColorTop: "white",
+            MonColor: "white",TueColor: "white",WedColor: "white",ThuColor: "white",FriColor: "white",SatColor: "white",SunColor: "white",
+            MonCircleColor: "transparent",TueCircleColor: "transparent",WedCircleColor: "transparent",ThuCircleColor: "transparent",FriCircleColor: "transparent",SatCircleColor: "transparent",SunCircleColor: "transparent",
+        })
         if(period){
             week = moment(this.state.currentWeek).add('1','week')
             this.getDays(week)
@@ -114,10 +119,6 @@ export default class FoodCard extends Component {
             week = moment(this.state.currentWeek).subtract('1','week')    
             this.getDays(week)
         }
-        this.setState({
-            MonColor: "white",TueColor: "white",WedColor: "white",ThuColor: "white",FriColor: "white",SatColor: "white",SunColor: "white",
-            MonCircleColor: "transparent",TueCircleColor: "transparent",WedCircleColor: "transparent",ThuCircleColor: "transparent",FriCircleColor: "transparent",SatCircleColor: "transparent",SunCircleColor: "transparent",
-        })
         if(moment(week).startOf('isoweek').format('YYYY-MM-DD') == moment(this.state.realSelectedDay).startOf('isoweek').format('YYYY-MM-DD')){
             let day = moment(this.state.realSelectedDay).format('ddd')
             this.setState({
@@ -128,10 +129,59 @@ export default class FoodCard extends Component {
     }
 
     selectedDay(value,real){
+        let monday = moment(real).startOf('isoweek')
+        if(moment(monday) > moment()){
+            this.setState({MonColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({MonColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({MonColor: 'white'})
+            this.setState({MonColorTop: 'white'})
+        }
+        if(moment(monday).add(1,'days') > moment()){
+            this.setState({TueColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({TueColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({TueColor: 'white'})
+            this.setState({TueColorTop: 'white'})
+        }
+        if(moment(monday).add(2,'days') > moment()){
+            this.setState({WedColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({WedColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({WedColor: 'white'})
+            this.setState({WedColorTop: 'white'})
+        }
+        if(moment(monday).add(3,'days') > moment()){
+            this.setState({ThuColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({ThuColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({ThuColor: 'white'})
+            this.setState({ThuColorTop: 'white'})
+        }
+        if(moment(monday).add(4,'days') > moment()){
+            this.setState({FriColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({FriColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({FriColor: 'white'})
+            this.setState({FriColorTop: 'white'})
+        }
+        if(moment(monday).add(5,'days') > moment()){
+            this.setState({SatColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({SatColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({SatColor: 'white'})
+            this.setState({SatColorTop: 'white'})
+        }
+        if(moment(monday).add(6,'days') > moment()){
+            this.setState({SunColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({SunColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({SunColor: 'white'})
+            this.setState({SunColorTop: 'white'})
+        }
         this.setState({
             selectedDay: value,
             realSelectedDay: real,
-            MonColor: "white",TueColor: "white",WedColor: "white",ThuColor: "white",FriColor: "white",SatColor: "white",SunColor: "white",
             MonCircleColor: "transparent",TueCircleColor: "transparent",WedCircleColor: "transparent",ThuCircleColor: "transparent",FriCircleColor: "transparent",SatCircleColor: "transparent",SunCircleColor: "transparent",
             [value+'Color']: "#1CBCD4",
             [value+'CircleColor']: "white"
@@ -160,12 +210,63 @@ export default class FoodCard extends Component {
             saturday: moment(monday).add(5,'days').format('ddd'), saturdayDD: moment(monday).add(5,'days').format('DD'), saturdayReal: moment(monday).add(5,'days'),
             sunday: moment(monday).add(6,'days').format('ddd'), sundayDD: moment(monday).add(6,'days').format('DD'), sundayReal: moment(monday).add(6,'days'),
         },this.getIndicator)
+        if(moment(monday) > moment()){
+            this.setState({MonColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({MonColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({MonColor: 'white'})
+            this.setState({MonColorTop: 'white'})
+        }
+        if(moment(monday).add(1,'days') > moment()){
+            this.setState({TueColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({TueColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({TueColor: 'white'})
+            this.setState({TueColorTop: 'white'})
+        }
+        if(moment(monday).add(2,'days') > moment()){
+            this.setState({WedColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({WedColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({WedColor: 'white'})
+            this.setState({WedColorTop: 'white'})
+        }
+        if(moment(monday).add(3,'days') > moment()){
+            this.setState({ThuColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({ThuColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({ThuColor: 'white'})
+            this.setState({ThuColorTop: 'white'})
+        }
+        if(moment(monday).add(4,'days') > moment()){
+            this.setState({FriColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({FriColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({FriColor: 'white'})
+            this.setState({FriColorTop: 'white'})
+        }
+        if(moment(monday).add(5,'days') > moment()){
+            this.setState({SatColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({SatColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({SatColor: 'white'})
+            this.setState({SatColorTop: 'white'})
+        }
+        if(moment(monday).add(6,'days') > moment()){
+            this.setState({SunColor: 'rgba(255, 255, 255, 0.5)'})
+            this.setState({SunColorTop: 'rgba(255, 255, 255, 0.5)'})
+        }else{
+            this.setState({SunColor: 'white'})
+            this.setState({SunColorTop: 'white'})
+        }
     }
 
     fetchDayCallback(value,day){
         if(!this.props.activityHappening){
-            this.props.fetchDay(value)
-            this.selectedDay(day,value)
+            if(value<moment()){
+                this.props.fetchDay(value)
+                this.selectedDay(day,value)
+            }
         }
     }
 
@@ -174,8 +275,9 @@ export default class FoodCard extends Component {
             <View style={styles.container}>
                 <View style={styles.containerRow} {...this._panResponder.panHandlers}> 
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.mondayReal,this.state.monday)}} style={styles.day}>
-                        <Text style={styles.dayText}>{this.state.monday}</Text>
+                        <Text style={[styles.dayText,{color: this.state.MonColorTop}]}>{this.state.monday}</Text>
                         {this.state.mondayFound &&
+                        this.state.MonCircleColor !== "white" &&
                         <View style={styles.indicator}>
                             <View style={styles.innerIndicator}></View>
                         </View>
@@ -185,8 +287,9 @@ export default class FoodCard extends Component {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.tuesdayReal,this.state.tuesday)}} style={styles.day}>
-                        <Text style={styles.dayText}>{this.state.tuesday}</Text>
+                        <Text style={[styles.dayText,{color: this.state.TueColorTop}]}>{this.state.tuesday}</Text>
                         {this.state.tuesdayFound &&
+                        this.state.TueCircleColor !== "white" &&
                         <View style={styles.indicator}>
                             <View style={styles.innerIndicator}></View>
                         </View>
@@ -196,8 +299,9 @@ export default class FoodCard extends Component {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.wednesdayReal,this.state.wednesday)}} style={styles.day}>
-                        <Text style={styles.dayText}>{this.state.wednesday}</Text>
+                        <Text style={[styles.dayText,{color: this.state.WedColorTop}]}>{this.state.wednesday}</Text>
                         {this.state.wednesdayFound &&
+                        this.state.WedCircleColor !== "white" &&
                         <View style={styles.indicator}>
                             <View style={styles.innerIndicator}></View>
                         </View>
@@ -207,8 +311,9 @@ export default class FoodCard extends Component {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.thursdayReal,this.state.thursday)}} style={styles.day}>
-                        <Text style={styles.dayText}>{this.state.thursday}</Text>
+                        <Text style={[styles.dayText,{color: this.state.ThuColorTop}]}>{this.state.thursday}</Text>
                         {this.state.thursdayFound &&
+                        this.state.ThuCircleColor !== "white" &&
                         <View style={styles.indicator}>
                             <View style={styles.innerIndicator}></View>
                         </View>
@@ -218,8 +323,9 @@ export default class FoodCard extends Component {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.fridayReal,this.state.friday)}} style={styles.day}>
-                        <Text style={styles.dayText}>{this.state.friday}</Text>
+                        <Text style={[styles.dayText,{color: this.state.FriColorTop}]}>{this.state.friday}</Text>
                         {this.state.fridayFound &&
+                        this.state.FriCircleColor !== "white" &&
                         <View style={styles.indicator}>
                             <View style={styles.innerIndicator}></View>
                         </View>
@@ -229,8 +335,9 @@ export default class FoodCard extends Component {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.saturdayReal,this.state.saturday)}} style={styles.day}>
-                        <Text style={styles.dayText}>{this.state.saturday}</Text>
+                        <Text style={[styles.dayText,{color: this.state.SatColorTop}]}>{this.state.saturday}</Text>
                         {this.state.saturdayFound &&
+                        this.state.SatCircleColor !== "white" &&
                         <View style={styles.indicator}>
                             <View style={styles.innerIndicator}></View>
                         </View>
@@ -240,8 +347,9 @@ export default class FoodCard extends Component {
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>{this.fetchDayCallback(this.state.sundayReal,this.state.sunday)}} style={styles.day}>
-                        <Text style={styles.dayText}>{this.state.sunday}</Text>
+                        <Text style={[styles.dayText,{color: this.state.SunColorTop}]}>{this.state.sunday}</Text>
                         {this.state.sundayFound &&
+                        this.state.SunCircleColor !== "white" &&
                         <View style={styles.indicator}>
                             <View style={styles.innerIndicator}></View>
                         </View>

@@ -176,8 +176,6 @@ export default class Logging extends Component {
                 this.setState({activityHappening: false})
                 let responseJson = JSON.parse(response._bodyInit);
                 if(responseJson.status == "ok"){
-                    console.log('-==========')
-                    console.log(responseJson)
                     if(responseJson.result.supplements.length>0){
                         this.setState({
                             supplements: [],
@@ -695,8 +693,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         height: 80,
         backgroundColor: "white",
-        borderWidth: 0.2,
+        borderWidth: (Platform.OS === 'ios') ? 0 : 0.2,
         borderColor: "#CCC",
-        justifyContent: "center"
+        justifyContent: "center",
+        shadowColor: 'gray',
+        shadowOffset: {
+        width: 2,
+        height: 1
+        },
+        shadowRadius: 4,
+        shadowOpacity: 0.3,
     },
 })

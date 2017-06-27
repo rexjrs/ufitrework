@@ -108,7 +108,6 @@ export default class FoodCard extends Component {
     }
 
     callback(){
-        console.log('IAMCALLBACK')
         this.props.navigation.state.params.fetchDay(moment(this.state.date).format(),true)
         this.props.navigation.goBack()
     }
@@ -246,6 +245,7 @@ export default class FoodCard extends Component {
             .then((response) => {
                 let responseJson = JSON.parse(response._bodyInit);
                 if(responseJson.status == "ok"){
+                    console.log(responseJson)
                     if(this.state.hasProduct){
                         this.setState({
                             finishedPost: Math.random()

@@ -49,7 +49,6 @@ export default class SupplementSelector extends Component {
     componentWillReceiveProps(nextProps){
         if(this.state.clicked != nextProps.clicked){
             if(!this.props.hasProduct){ //For AddPost
-                console.log('hi')
                 this.addProducts()
             }
         }
@@ -119,12 +118,9 @@ export default class SupplementSelector extends Component {
                 let responseJson = JSON.parse(response._bodyInit);
                 fetchCounter = fetchCounter+1
                 if(fetchCounter == counter){
-                    console.log('IRAN======')
                     if(!this.props.hasProduct){
-                        console.log('itriedtogetprods')
                         this.props.getProduct(this.props.stateDate)
                     }else{
-                        console.log('i called fetch day')
                         this.props.fetchDay(this.props.stateDate,true)
                     }
                     this.props.navigation.goBack()
@@ -143,7 +139,7 @@ export default class SupplementSelector extends Component {
                     </View>
                     }
                     {value.selected &&
-                    <View style={{marginRight: 10,height: 20, width: 20, backgroundColor: "#FF9800", justifyContent: "center",alignItems: "center"}}>
+                    <View style={{marginRight: 10,height: 20, width: 20, backgroundColor: "#FF9800",overflow: 'hidden', justifyContent: "center",alignItems: "center"}}>
                         <Icon name="ios-checkmark" size={35} color="white" />
                     </View>
                     }

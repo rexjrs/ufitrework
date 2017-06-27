@@ -10,7 +10,8 @@ Modal,
 TouchableOpacity,
 Platform,
 Alert,
-AsyncStorage
+AsyncStorage,
+Image
 } from 'react-native';
 import moment from 'moment'
 import Progress from './Progress'
@@ -575,6 +576,22 @@ export default class Logging extends Component {
                     <CompletedFourTwelve is_taken={this.state.fourTwelveTaken}/>
                     }
                     { CompletedCards }
+                    <View style={styles.bottomContainer}>
+                        <TouchableOpacity style={[styles.bottomButtons, {marginLeft: 10}]}
+                            onPress={()=>this.props.navigation.navigate('AddPost',{ cardType: 'Exercise', icon: 'exercise', date: this.state.stateDate, action: 'add', screenProps: this.props.screenProps, fetchDay: this.fetchDay.bind(this)})}
+                        >
+                            <Image source={require('../../assets/icons/exercise.png')} style={{width: 30, height: 30}} />
+                            <Text style={{fontSize: 13, fontWeight: "400", color: "gray"}}>Add Exercise</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.bottomButtons, {marginHorizontal: 10}]}>
+                            <Image source={require('../../assets/icons/snack.png')} style={{width: 30, height: 30}} />
+                            <Text style={{fontSize: 13, fontWeight: "400", color: "gray"}}>Add Snack</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.bottomButtons, {marginRight: 10}]}>
+                            <Image source={require('../../assets/icons/supplements.png')} style={{width: 30, height: 30}} />
+                            <Text style={{fontSize: 13, fontWeight: "400", color: "gray"}}>Add Supplement</Text>
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.bottomPadding}></View>
                 </ScrollView>
                 <Modal
@@ -642,5 +659,18 @@ const styles = StyleSheet.create({
         height: window.height*0.3,
         width: window.width,   
         backgroundColor: 'rgba(0, 0, 0, 0.3)'
+    },
+    bottomContainer: {
+        flexDirection: "row",
+        marginTop: 20
+    },
+    bottomButtons: {
+        flex: 1/3,
+        alignItems: "center",
+        height: 80,
+        backgroundColor: "white",
+        borderWidth: 0.2,
+        borderColor: "#CCC",
+        justifyContent: "center"
     },
 })

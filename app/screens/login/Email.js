@@ -44,12 +44,13 @@ export default class Email extends Component {
             this.setState({
                 loading: true
             })
-            fetch(`${APIURL}/checkemail?email=${this.state.email}`, {
+            fetch(`${APIURL3}/checkemail?email=${this.state.email}`, {
                 method: 'GET',
                 headers: HEADERPARAM
             })
             .then((response) => {
                 let responseJson = JSON.parse(response._bodyInit);
+                console.log(responseJson)
                 if(responseJson.status == "ok"){
                     this.setState({
                         loading: false

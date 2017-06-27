@@ -167,10 +167,13 @@ export default class FoodCard extends Component {
             let responseJson = JSON.parse(response._bodyInit);
             console.log(responseJson)
             if(responseJson.status == "ok"){
+                console.log('ok')
                 let id = responseJson.post.id;
                 if(this.state.imageSource){
+                    console.log('up')
                     this.uploadImage(id);
                 }else{
+                    console.log('callback')
                     this.callback()
                 }
             }
@@ -207,10 +210,8 @@ export default class FoodCard extends Component {
     }
 
     uploadImage(id){
-        if(this.state.cardType === "Exercise"){
-            if(this.state.isSelected){
-                this.callback()
-            }
+        if(this.state.isSelected){
+            this.callback()
         }else{
             this.setState({loadingMessage: 'Uploading image...', loading: true})
             let params = {

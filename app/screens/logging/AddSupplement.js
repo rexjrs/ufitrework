@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.3)'
     },
     scrollview: {
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        paddingVertical: 10,
     },
     header: {
         flexDirection: "row",

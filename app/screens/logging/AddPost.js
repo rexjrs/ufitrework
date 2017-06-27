@@ -17,6 +17,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
+import SupplementSelector from './SupplementSelector'
 
 export default class FoodCard extends Component {
     constructor(props) {
@@ -36,7 +37,8 @@ export default class FoodCard extends Component {
             action: this.props.navigation.state.params.action,
             error: "",
             isSelected: false,
-            postid: this.props.navigation.state.params.id
+            postid: this.props.navigation.state.params.id,
+            hasProduct: false
         };
     }
 
@@ -63,6 +65,12 @@ export default class FoodCard extends Component {
 
     back(){
         this.props.navigation.goBack()
+    }
+
+    hasProduct(value){
+        this.setState({
+            hasProduct: value
+        })
     }
 
     openGallery(){
@@ -100,6 +108,7 @@ export default class FoodCard extends Component {
     }
 
     callback(){
+        console.log('IAMCALLBACK')
         this.props.navigation.state.params.fetchDay(moment(this.state.date).format(),true)
         this.props.navigation.goBack()
     }
@@ -168,7 +177,13 @@ export default class FoodCard extends Component {
                 if(this.state.imageSource){
                     this.uploadImage(id);
                 }else{
-                    this.callback()
+                    if(this.state.hasProduct){
+                        this.setState({
+                            finishedPost: Math.random()
+                        })
+                    }else{
+                        this.callback()
+                    }
                 }
             }
         })
@@ -197,7 +212,13 @@ export default class FoodCard extends Component {
                 if(this.state.imageSource){
                     this.uploadImage(this.state.postid.toString());
                 }else{
-                    this.callback()
+                    if(this.state.hasProduct){
+                        this.setState({
+                            finishedPost: Math.random()
+                        })
+                    }else{
+                        this.callback()
+                    }
                 }
             }
         })
@@ -225,7 +246,13 @@ export default class FoodCard extends Component {
             .then((response) => {
                 let responseJson = JSON.parse(response._bodyInit);
                 if(responseJson.status == "ok"){
-                    this.callback()
+                    if(this.state.hasProduct){
+                        this.setState({
+                            finishedPost: Math.random()
+                        })
+                    }else{
+                        this.callback()
+                    }
                 }
             })
         }
@@ -274,7 +301,7 @@ export default class FoodCard extends Component {
                     </View>
                 </View>
                 <ScrollView style={styles.scrollview}>
-                    <View style={styles.cell}>
+                    <View style={[styles.cell,{marginBottom: 20}]}>
                         <View style={styles.headerBox}>
                             {this.state.icon === "breakfast" &&
                             <Image source={require('../../assets/icons/breakfast.png')} style={{width: 30, height: 30}}/>
@@ -324,6 +351,7 @@ export default class FoodCard extends Component {
                         <Text style={styles.error}>{this.state.error}</Text>
                         }
                     </View>
+                    <SupplementSelector finishedPost={this.state.finishedPost} hasProduct={this.hasProduct.bind(this)} screenProps={this.props.navigation.state.params.screenProps} stateDate={this.state.date} navigation={ this.props.navigation} fetchDay={this.props.navigation.state.params.fetchDay}/>
                 </ScrollView>
                 <Modal
                     animationType={"slide"}

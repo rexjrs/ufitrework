@@ -26,7 +26,7 @@ export default class SupplementSelector extends Component {
             dataSource: ds.cloneWithRows(this.props.screenProps.products),
             dataSourceClean: this.props.screenProps.products,
             products: [],
-            clicked: Math.random()
+            clicked: Math.random(),
         };
     }
     
@@ -48,7 +48,15 @@ export default class SupplementSelector extends Component {
 
     componentWillReceiveProps(nextProps){
         if(this.state.clicked != nextProps.clicked){
-            this.addProducts()
+            if(!this.props.hasProduct){ //For AddPost
+                console.log('hi')
+                this.addProducts()
+            }
+        }
+        if(this.props.hasProduct){
+            if(this.state.finishedPost != nextProps.finishedPost){
+                this.addProducts()
+            }
         }
     }
 
@@ -63,6 +71,21 @@ export default class SupplementSelector extends Component {
                 tempArray[i].selected = !tempArray[i].selected
             }
         }
+        // For AddPost
+        if(this.props.hasProduct){
+            let found = false
+            for(var i in tempArray){
+                if(tempArray[i].selected){
+                    found = true
+                }
+            }
+            if(found){
+                this.props.hasProduct(true)
+            }else{
+                this.props.hasProduct(false)
+            }
+        }
+        // 
         this.setState({
             dataSource: ds.cloneWithRows(tempArray),
             dataSourceClean: tempArray
@@ -95,9 +118,15 @@ export default class SupplementSelector extends Component {
             .then((response) => {
                 let responseJson = JSON.parse(response._bodyInit);
                 fetchCounter = fetchCounter+1
-                console.log(response)
                 if(fetchCounter == counter){
-                    this.props.getProduct(this.props.stateDate)
+                    console.log('IRAN======')
+                    if(!this.props.hasProduct){
+                        console.log('itriedtogetprods')
+                        this.props.getProduct(this.props.stateDate)
+                    }else{
+                        console.log('i called fetch day')
+                        this.props.fetchDay(this.props.stateDate,true)
+                    }
                     this.props.navigation.goBack()
                 }
             })
@@ -154,7 +183,7 @@ var window = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
     productCellModal: {
         flexDirection: "row",
@@ -178,7 +207,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         width: window.width * 0.95,
         paddingHorizontal: 20,
-        paddingVertical: 10
+        paddingVertical: 10,
     },
     headerBox: {
         flexDirection: "row",

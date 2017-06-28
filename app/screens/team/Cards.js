@@ -42,7 +42,7 @@ export default class Cards extends Component {
         var Images =  this.state.data.data.map((b,i) => {
             let source = { uri: BUCKETIMAGES+'/'+b.image_filename}
             return (
-                <TouchableOpacity key={i} style={styles.cardImage}>
+                <TouchableOpacity key={i} style={styles.cardImage} onPress={()=>this.props.setImage(BUCKETIMAGES+'/'+b.image_filename)}>
                     {b.profile_picture &&
                     <View style={{zIndex: 4, width:31,height:31,borderWidth:1,borderColor:"#ccc",borderRadius:20, position: "absolute", right: -6, top: -6}}>
                         <CacheableImage style={{width:30,height:30,borderWidth:3,borderColor:"white",borderRadius:15,position: "absolute", right: 0, top: 0}} source={{uri: BUCKETIMAGES+'/'+b.profile_picture}}/>

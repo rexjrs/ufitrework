@@ -185,7 +185,7 @@ export default class Team extends Component {
 
     _renderRow(value){
         return(
-            <Cards key={value.id} data={value} addComment={this.addComment.bind(this)}/>
+            <Cards key={value.id} setImage={this.props.screenProps.setImage} data={value} addComment={this.addComment.bind(this)}/>
         )
     }
 

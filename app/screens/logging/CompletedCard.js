@@ -127,7 +127,9 @@ export default class FoodCard extends Component {
                         <Text style={styles.desc}>{this.props.description}</Text>
                         }
                         {this.props.restDay != 1 &&
+                        <TouchableOpacity onPress={()=>this.props.setImage(imageURI+'/'+this.props.image)}>
                         <CacheableImage source={{ uri: imageURI+'/'+this.props.image}} style={styles.image}/>
+                        </TouchableOpacity>
                         }
                         {this.props.cardType === "Exercise" && this.props.restDay == 1 &&
                         <View style={styles.restDay}>

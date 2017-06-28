@@ -6,9 +6,12 @@ import {
   View,
   AsyncStorage,
   StatusBar,
-  Image
+  Image,
+  Modal,
+  ActivityIndicator
 } from 'react-native';
 import './config/config';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 class Index extends Component {
     constructor(props) {
@@ -22,7 +25,9 @@ class Index extends Component {
             challengeID: '',
             needChallenge: null,
             products: [],
-            loaded: false
+            loaded: false,
+            visible: true,
+            imageSource: null
         };
     }
 
@@ -125,6 +130,13 @@ class Index extends Component {
         })
     }
 
+    setImage(url){
+        this.setState({
+            imageSource: url,
+            visible: true
+        })
+    }
+
     render(){
         var restingView = ()=>{
             return(
@@ -151,6 +163,7 @@ class Index extends Component {
                         products: this.state.products,
                         fourTwelve: this.state.fourTwelve,
                         incompleteDays: this.state.incompleteDays,
+                        setImage: this.setImage.bind(this),
                         setFourTwelve: this.setFourTwelve.bind(this),
                         setProducts: this.setProducts.bind(this),
                         logout: this.logout.bind(this)
@@ -162,6 +175,21 @@ class Index extends Component {
                         login: this.loggedIn.bind(this)
                     }}/>
                 }
+                <Modal visible={this.state.visible} transparent={true}>
+                    <ImageViewer
+                        imageUrls={[{url: this.state.imageSource}]}
+                        onCancel={()=>this.setState({visible: false})}
+                        loadingRender={()=>
+                            {
+                                return(
+                                    <ActivityIndicator
+                                        size="large" color="white" animating={true}
+                                    />
+                                )
+                            }
+                        }
+                    />
+                </Modal>
             </View>
         ) 
     }

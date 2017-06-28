@@ -666,7 +666,7 @@ export default class Logging extends Component {
         var CompletedCards =  this.state.completedCards.map((b,i) => {
             if(this.state.deletingID != b.id){
                 return (
-                    <CompletedCard key={i} username={this.state.username} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image} restDay={b.restDay}/>
+                    <CompletedCard key={i} setImage={this.props.screenProps.setImage} username={this.state.username} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image} restDay={b.restDay}/>
                 )
             }else{
                 return(

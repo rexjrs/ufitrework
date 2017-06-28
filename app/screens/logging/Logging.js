@@ -405,6 +405,7 @@ export default class Logging extends Component {
             .then((response) => {
                 this.setState({loading: false})
                 let responseJson = JSON.parse(response._bodyInit);
+                console.log(responseJson)
                 if(responseJson.status == "ok"){
                     if(responseJson.result.breakfast){
                         let tempArray = this.state.presets

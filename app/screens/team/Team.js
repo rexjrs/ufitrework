@@ -110,13 +110,15 @@ export default class Team extends Component {
     }
 
     getFeed(){
+        this.setState({
+            dataSourceClean: []
+        })
         fetch(`${APIURL3}/fetchfeeds?username=${this.state.username}`, {
                 method: 'GET',
                 headers: HEADERPARAM3
         })
         .then((response) => {
             let responseJson = JSON.parse(response._bodyInit);
-            responseJson.result = responseJson.result.reverse()
             if (responseJson.status == "ok") {
                 for (var i in responseJson.result) {
                     if (responseJson.result[i].breakfast) {
@@ -188,11 +190,27 @@ export default class Team extends Component {
     }
 
     render() {
+        console.log(this.props.screenProps)
         return(
             <View style={styles.container}>
                 {Platform.OS === "ios" &&
                 <View style={styles.statusBar}></View>
                 }
+                <View style={styles.topPosting}>
+                    <View style={{alignItems: "center",justifyContent: "center"}}>
+                        <Image style={{height: 50, width: 50, borderRadius: 25, marginLeft: 10}} source={{uri: BUCKETIMAGES+'/'+this.props.screenProps.profileImage}}/>
+                    </View>
+                    <View>
+                        <TextInput
+                            placeholder="What are you up to?"
+                            placeholderTextColor="gray"
+                            style={{marginLeft: 10, height: 40, width: window.width*0.6, marginTop: 15, fontSize: 14}}
+                        />
+                    </View>
+                    <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center', marginRight: 20}}>
+                        <Icon name="ios-attach-outline" size={40} color="gray" type="ionicon" />
+                    </View>
+                </View>
                 {this.state.loading &&
                 <ActivityIndicator
                     animating={true}
@@ -224,6 +242,19 @@ var window = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  topPosting:{
+    backgroundColor: "white",
+    height: 70,
+    marginBottom: 15,
+    shadowColor: 'gray',
+    shadowOffset: {
+    width: 2,
+    height: 1
+    },
+    shadowRadius: 4,
+    shadowOpacity: 0.3,
+    flexDirection: "row"
   },
   keyboardInput:{
     position: "absolute",

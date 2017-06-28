@@ -205,6 +205,7 @@ export default class Username extends Component {
                             returnKeyType="next"
                             autoCapitalize="none"
                             autoCorrect={false}
+                            keyboardType="numeric"
                             underlineColorAndroid="transparent"
                             onChangeText={(ba) => this.setState({ba})}
                             onSubmitEditing={this.nextPage.bind(this)}

@@ -48,7 +48,7 @@ export default class Cards extends Component {
                         <CacheableImage style={{width:30,height:30,borderWidth:3,borderColor:"white",borderRadius:15,position: "absolute", right: 0, top: 0}} source={{uri: BUCKETIMAGES+'/'+b.profile_picture}}/>
                     </View>
                     }
-                    <CacheableImage source={source} style={{height: 150, width: tempWidth}}/>
+                    <Image source={source} style={{height: 150, width: tempWidth}}/>
                 </TouchableOpacity>
             )
         });
@@ -64,7 +64,7 @@ export default class Cards extends Component {
                             <View style={{flexDirection: "row"}}> 
                                 <Text style={{color: "#666666", fontWeight: "bold", fontSize: 18, paddingLeft: 20}}>Team {this.state.data.type}</Text>
                             </View>
-                            <Text style={{color: "grey", fontSize: 15, paddingLeft: 20, paddingRight: 20}}></Text>
+                            <Text style={{color: "grey", fontSize: 15, paddingLeft: 20, paddingRight: 20}}>{this.state.data.date}</Text>
                     </View>
                     <View style={{flex:0.15,height: 20, justifyContent: "center",width: 30}}>
                             <Icon name="ios-more" type="ionicon" size={40} color="#a9a9a9" />

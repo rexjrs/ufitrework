@@ -119,6 +119,7 @@ export default class Team extends Component {
         })
         .then((response) => {
             let responseJson = JSON.parse(response._bodyInit);
+            console.log(responseJson)
             if (responseJson.status == "ok") {
                 for (var i in responseJson.result) {
                     if (responseJson.result[i].breakfast) {
@@ -169,6 +170,22 @@ export default class Team extends Component {
                         })
                         this.getComment(responseJson.result[i].id)
                     }
+                    if (responseJson.result[i].exercise) {
+                        let tempArray = this.state.dataSourceClean
+                        let tempDate = moment(responseJson.result[i].date).format('DD MMMM YYYY')
+                        tempArray.push({
+                            date: tempDate,
+                            type: "Exercise",
+                            data: responseJson.result[i].exercise,
+                            id: responseJson.result[i].id,
+                            comments: []
+                        })
+                        this.setState({
+                            dataSource: ds.cloneWithRows(tempArray),
+                            dataSourceClean: tempArray,
+                        })
+                        this.getComment(responseJson.result[i].id)
+                    }
                     if(i == responseJson.result.length-1){
                         this.setState({
                             loading: false,
@@ -190,7 +207,6 @@ export default class Team extends Component {
     }
 
     render() {
-        console.log(this.props.screenProps)
         return(
             <View style={styles.container}>
                 {Platform.OS === "ios" &&
@@ -216,7 +232,7 @@ export default class Team extends Component {
                     animating={true}
                     color="#E91E63"
                     size="large"
-                    style={{marginTop: 80}}
+                    style={{marginTop: 40}}
                 />
                 }
                 {!this.state.loading &&

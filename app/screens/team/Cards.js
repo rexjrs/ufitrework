@@ -41,6 +41,9 @@ export default class Cards extends Component {
         }
         var Images =  this.state.data.data.map((b,i) => {
             let source = { uri: BUCKETIMAGES+'/'+b.image_filename}
+            if(this.state.data.type == "Exercise"){
+                source = {uri: BUCKETEXERCISEIMAGES+"/"+b.image_filename}
+            }
             return (
                 <TouchableOpacity key={i} style={styles.cardImage} onPress={()=>this.props.setImage(BUCKETIMAGES+'/'+b.image_filename)}>
                     {b.profile_picture &&

@@ -22,6 +22,7 @@ import Week from './Week'
 import FourTwelve from './FourTwelve'
 import CompletedProduct from './CompletedProduct'
 import CompletedFourTwelve from './CompletedFourTwelve'
+import ImagePicker from 'react-native-image-crop-picker';
 
 var GlobalToday = new Date();
 
@@ -43,13 +44,17 @@ export default class Logging extends Component {
             loading: true,
             stateDate: new Date(),
             visible: false,
+            visibleCamera: false,
             selectedPost: null,
             products: [],
             originalProduct: this.props.screenProps.products,
             supplements: [],
             fourTwelveEnabled: false,
             activityHappening: false,
-            incompleteDays: []
+            incompleteDays: [],
+            imageSource: null,
+            focusType: null,
+            uploadingMessage: "Creating post..."
         };
     }
 
@@ -75,12 +80,116 @@ export default class Logging extends Component {
         })
     }
 
+
+    // =========================== FOR QUICK LOG CAMERA BUTTON ============
+
+    selectImage(type){
+        this.setState({
+            visibleCamera: true,
+            focusType: type
+        })
+    }
+
+    openGallery(){
+        ImagePicker.openPicker({
+            compressImageMaxHeight: 1000,
+            compressImageMaxWidth: 2000,
+            includeBase64: true
+        }).then(image => {
+            this.setState({
+                imageSource: image.data,
+                visibleCamera: false
+            },this.addPost)
+        })
+        .catch(e => {
+             this.setState({visibleCamera: false})
+        });
+    }
+
+    openCamera(){
+        ImagePicker.openCamera({
+            compressImageMaxHeight: 1000,
+            compressImageMaxWidth: 2000,
+            includeBase64: true
+        }).then(image => {
+            this.setState({
+                imageSource: image.data,
+                visibleCamera: false
+            },this.addPost)
+        })
+        .catch(e => {
+             this.setState({visibleCamera: false})
+        });
+    }
+
+    addPost(){
+        let tempArray = this.state.presets
+        for(var i in tempArray){
+            if(tempArray[i].type == this.state.focusType){
+                tempArray[i].enabled = false
+            }
+        }
+        this.setState({presets: tempArray, uploading: true,uploadingMessage: "Creating post..."})
+        let params = {
+            username: this.state.username,
+            coachChallengeId: this.props.screenProps.challengeID,
+            description: "",
+            type: this.state.focusType.toLowerCase(),
+            dateofpost: this.state.stateDate
+        }
+        if(this.state.focusType === "Exercise"){
+            params['restDay'] = "0"
+        }
+        fetch(`${APIURL3}/addpost`, {
+                method: 'POST',
+                body: JSON.stringify(params),
+                headers: HEADERPARAM3
+        })
+        .then((response) => {
+            let responseJson = JSON.parse(response._bodyInit);
+                console.log(responseJson)
+            if(responseJson.status == "ok"){
+                let id = responseJson.post.id;
+                this.uploadImage(id);
+            }
+        })
+    }
+
+    uploadImage(id){
+        this.setState({uploadingMessage: "Uploading image..."})
+        let params = {
+            username: this.state.username,
+            imageType: 'Images',
+            postid: id.toString(),
+            image: this.state.imageSource
+        }
+        if(this.state.focusType === "Exercise"){
+            params['imageType'] = 'Exercise'
+        }
+        fetch(`${APIURL3}/uploadimage`, {
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: HEADERPARAM3
+        })
+        .then((response) => {
+            let responseJson = JSON.parse(response._bodyInit);
+                console.log(responseJson)
+            if(responseJson.status == "ok"){
+                this.setState({uploading: false})
+                this.fetchDay(this.state.stateDate,true)
+            }
+        })
+    }
+
+    // =========================== STOP USERS SWITCHING DAYS DURING ACTIONS ============
+    
     activityHappening(value){
         this.setState({
             activityHappening: value
         })
     }
 
+    // =========================== 4-4-12 HANDLERS ===============================
     updateFourTwelve(value){
         if(value == "1"){
             this.setState({
@@ -105,6 +214,8 @@ export default class Logging extends Component {
             }
         }
     }
+
+    // =========================== PRODUCT HANDLERS =================================
 
     getProducts(value,update){
         let products = this.props.screenProps.products
@@ -219,6 +330,8 @@ export default class Logging extends Component {
         },this.getProducts(this.props.screenProps.products,true))
     }
 
+    // =========================== INCOMPLETE INDICATOR HANDLER ======================
+
     figureIfIncomplete(){
         let incompleteTemp = this.state.incompleteDays
         if(this.state.completedCount < 5){
@@ -244,6 +357,8 @@ export default class Logging extends Component {
         })
     }
 
+    // =========================== GET DAILY DATA ===================================
+
     fetchDay(date,force){
         date = moment(date).format('YYYY-MM-DD')
         this.setState({
@@ -259,6 +374,7 @@ export default class Logging extends Component {
             stateDate: moment(date).format('YYYY-MM-DD')
         },this.getProducts(this.props.screenProps.products,true))
         let found = false
+        // USE DATA FROM STATE
         if(!force){
             for(var i in this.state.dayHistory){
                 if(this.state.dayHistory[i].date === date){
@@ -279,6 +395,7 @@ export default class Logging extends Component {
                 }
             }
         }
+        // GET DATA FROM API - force variable can be used to force a refresh, send as true
         if(!found){
             this.setState({loading: true,activityHappening: true})
             fetch(`${APIURL3}/fetchdailyresources3?username=${this.state.username}&date=${date}`, {
@@ -469,6 +586,8 @@ export default class Logging extends Component {
         }
     }
 
+    // =========================== FOCUS ON A SPECIFIC POST FOR NEXT ACTION ============
+
     focusPost(value){
         this.setState({
             selectedPost: value,
@@ -489,6 +608,8 @@ export default class Logging extends Component {
             )
         }
     }
+
+    // =========================== POST HANDLERS =================================
 
     editPost(value){
         this.setState({visible: false})
@@ -532,17 +653,19 @@ export default class Logging extends Component {
         })
     }
 
+    // =========================== END OF FUNCTIONS ===================================
+
     render() {
         var FoodCards =  this.state.presets.map((b,i) => {
             return (
                 b.enabled &&
-                <FoodCard navigation={this.props.navigation} screenProps={this.props.screenProps} fetchDay={this.fetchDay.bind(this)} key={i} cardType={b.type} date={b.date} icon={b.icon} stateDate={this.state.stateDate}/>
+                <FoodCard selectImage={this.selectImage.bind(this)} navigation={this.props.navigation} screenProps={this.props.screenProps} fetchDay={this.fetchDay.bind(this)} key={i} cardType={b.type} date={b.date} icon={b.icon} stateDate={this.state.stateDate}/>
             )
         });
         var CompletedCards =  this.state.completedCards.map((b,i) => {
             if(this.state.deletingID != b.id){
                 return (
-                    <CompletedCard key={i} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image} restDay={b.restDay}/>
+                    <CompletedCard key={i} username={this.state.username} id={b.id} cardType={b.cardType} focusPost={this.focusPost.bind(this)} date={b.date} description={b.description} image={b.image} restDay={b.restDay}/>
                 )
             }else{
                 return(
@@ -579,7 +702,17 @@ export default class Logging extends Component {
                             color="#E91E63"
                             size="small"
                         />
-                        <Text style={{color: "#E91E63",marginLeft: 5,marginTop: 2}}>Fetching stuff</Text>
+                        <Text style={{color: "#E91E63",marginLeft: 5,marginTop: 2}}>Fetching stuff...</Text>
+                    </View>
+                    }
+                    {this.state.uploading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator
+                            animating={true}
+                            color="#E91E63"
+                            size="small"
+                        />
+                        <Text style={{color: "#E91E63",marginLeft: 5,marginTop: 2}}>{this.state.uploadingMessage}</Text>
                     </View>
                     }
                     { FoodCards }
@@ -618,6 +751,27 @@ export default class Logging extends Component {
                     </View>
                     <View style={styles.bottomPadding}></View>
                 </ScrollView>
+                <Modal
+                    animationType={"slide"}
+                    visible={this.state.visibleCamera}
+                    style={styles.modal}
+                    transparent={true}
+                    onRequestClose={()=>this.setState({visibleCamera: false})}
+                >
+                    <TouchableOpacity style={styles.modalTop} onPress={()=>this.setState({visibleCamera: false})}>
+                    </TouchableOpacity>
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity onPress={this.openCamera.bind(this)} style={[styles.button,{borderBottomWidth: 1, borderColor: "#CCC", borderTopLeftRadius: 10, borderTopRightRadius: 10}]}>
+                            <Text style={styles.buttonText}>Open Camera</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.openGallery.bind(this)} style={[styles.button,{borderBottomLeftRadius: 10, borderBottomRightRadius: 10}]}>
+                            <Text style={styles.buttonText}>Open Gallery</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.setState({visible: false})} style={[styles.button,{marginTop: 10,borderRadius: 10}]}>
+                            <Text style={[styles.buttonText,{fontWeight: "bold"}]}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
                 <Modal
                     animationType={"slide"}
                     visible={this.state.visible}

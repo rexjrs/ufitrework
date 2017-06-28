@@ -56,7 +56,9 @@ export default class FoodCard extends Component {
                             <View style={styles.foodIcon}><Image source={require('../../assets/icons/exercise.png')} style={{width: 30, height: 30}}/></View>
                             }
                             <Text style={styles.headerText}>{this.state.cardType}</Text>
-                            <View style={styles.cameraIcon}><Icon name="ios-camera" size={35} color="#808184" /></View>
+                            <TouchableOpacity onPress={()=>this.props.selectImage(this.props.cardType)}>
+                                <View style={styles.cameraIcon}><Icon name="ios-camera" size={35} color="#808184" /></View>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>

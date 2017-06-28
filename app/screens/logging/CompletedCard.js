@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
   TextInput,
-  Platform
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
@@ -17,11 +18,65 @@ export default class FoodCard extends Component {
     constructor(props) {
         super(props);
         this.state = { 
+            comments: [],
+            fetchedComments: false,
+            commentInput: ""
         };
     }
 
     componentWillMount(){
+        this.getComment()
+    }
 
+    getComment(){
+        fetch(`${APIURL3}/fetchcomments?postid=${this.props.id}`, {
+            method: 'GET',
+            headers: HEADERPARAM3
+        })
+        .then((response) => {
+            let responseJson = JSON.parse(response._bodyInit);
+            let commentsArray = [];
+            for(var i in responseJson.result){
+                commentsArray.push({
+                    username: responseJson.result[i].username,
+                    comment: responseJson.result[i].commentString
+                })
+            }
+            this.setState({
+                comments: commentsArray,
+                fetchedComments: true
+            })
+        })
+    }
+
+    addComment(){
+        if(this.state.commentInput == ""){
+
+        }else{
+            let param = {
+                username: this.props.username,
+                postid: this.props.id,
+                comment: this.state.commentInput
+            }
+            let params = JSON.stringify(param)
+            fetch(`${APIURL3}/addcomment`, {
+                method: 'POST',
+                body: params,
+                headers: HEADERPARAM3
+            })
+            .then((response) => {
+                let responseJson = JSON.parse(response._bodyInit);
+            })
+            let commentArray = this.state.comments;
+            commentArray.push({
+                username: this.props.username,
+                comment: this.state.commentInput
+            })
+            this.setState({
+                comments: commentArray,
+                commentInput: ""
+            })
+        }
     }
 
     render() {
@@ -32,6 +87,13 @@ export default class FoodCard extends Component {
                 imageURI = BUCKETIMAGES
             }
         }
+        var Comments = this.state.comments.map((b,i) => {
+            return (
+                <View key={i} style={styles.commentArea}>
+                    <Text style={{fontSize: 15, fontWeight: "bold", color: "#666666"}}>{b.username} </Text><Text style={{fontSize: 13,marginTop: 2}}>{b.comment}</Text>
+                </View>
+            )
+        })
         return (
             <View style={styles.container}>
                 <View style={styles.cell}>
@@ -67,12 +129,39 @@ export default class FoodCard extends Component {
                         {this.props.restDay != 1 &&
                         <CacheableImage source={{ uri: imageURI+'/'+this.props.image}} style={styles.image}/>
                         }
+                        {this.props.cardType === "Exercise" && this.props.restDay == 1 &&
+                        <View style={styles.restDay}>
+                            <Text>Today is a rest day</Text>
+                        </View>
+                        }
+                        {!this.state.fetchedComments &&
+                        <View style={{alignItems: "flex-start", marginVertical: 5}}>
+                            <ActivityIndicator
+                                size="small"
+                                color="#1CBCD4"
+                                animating={true}
+                            />
+                        </View>
+                        }
+                        {this.state.fetchedComments &&
+                            Comments 
+                        }
+                        <View style={{flexDirection: "row", alignItems: "center", paddingLeft: 20, paddingRight: 20, marginTop: 10}}>
+                             <Icon name="ios-chatboxes-outline" size={30} color="#CCC" />
+                            <TextInput 
+                                style={styles.commentInput}
+                                placeholder="Say something..."
+                                placeholderTextColor="gray"
+                                underlineColorAndroid="transparent"
+                                multiline={true}
+                                value={this.state.commentInput}
+                                onChangeText={(commentInput) => this.setState({commentInput})}
+                            />
+                            <TouchableOpacity onPress={this.addComment.bind(this)}>
+                                <Icon name="md-send" size={25} color="#CCC" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    {this.props.cardType === "Exercise" && this.props.restDay == 1 &&
-                    <View style={styles.restDay}>
-                        <Text>Today is a rest day</Text>
-                    </View>
-                    }
                 </View>
             </View>
         );
@@ -86,6 +175,16 @@ const styles = StyleSheet.create({
         marginTop: 7,
         justifyContent: "center",
         alignItems: "center",
+    },
+    commentArea:{
+        marginTop: 5,
+        flexDirection: "row",
+        width: window.width*0.95,
+    },
+    commentInput:{
+        flex: 0.7,
+        paddingLeft: 20,
+        fontSize: 13
     },
     image: {
         width: window.width*0.9,

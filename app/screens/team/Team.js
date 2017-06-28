@@ -15,6 +15,7 @@ RefreshControl
 import { Icon } from 'react-native-elements'
 import moment from 'moment';
 import CacheableImage from 'react-native-cacheable-image';
+import Cards from './Cards'
 
 var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2,sectionHeaderHasChanged: (s1, s2) => s1 !== s2});
 export default class Team extends Component {
@@ -24,7 +25,9 @@ export default class Team extends Component {
             dataSource: ds.cloneWithRows(['row 1', 'row 2']),
             dataSourceClean: [],
             loading: true,
-            refreshing: false
+            refreshing: false,
+            keyHeight: null,
+            keyHidden: true
         };
     }
 
@@ -34,14 +37,79 @@ export default class Team extends Component {
         },this.getFeed)
     }
 
+
     _onRefresh(){
-        this.setState({refreshing: true, loading: true});
+        this.setState({refreshing: true,loading: true});
         this.getFeed()
         this.setState({refreshing: false});
     }
 
+    addComment(id,comment){
+        if(comment == ""){
+
+        }else{
+            let param = {
+                username: this.state.username,
+                postid: id,
+                comment: comment
+            }
+            let params = JSON.stringify(param)
+            fetch(`${APIURL3}/addcomment`, {
+                method: 'POST',
+                body: params,
+                headers: HEADERPARAM3
+            })
+            .then((response) => {
+                let responseJson = JSON.parse(response._bodyInit);
+            })
+            let tempArray = this.state.dataSourceClean
+            let arrayPos = null
+            for(var i in tempArray){
+                if(tempArray[i].id == id){
+                    arrayPos = i
+                }
+            }
+            let commentArray = tempArray[arrayPos].comments
+            commentArray.push({
+                username: this.state.username,
+                comment: comment
+            })
+            tempArray[arrayPos].comments = commentArray
+            this.setState({
+                dataSource: ds.cloneWithRows(tempArray),
+                dataSourceClean: tempArray,
+            })
+        }
+    }
+
+    getComment(value){
+        fetch(`${APIURL3}/fetchcomments?postid=${value}`, {
+            method: 'GET',
+            headers: HEADERPARAM3
+        })
+        .then((response) => {
+            let commentArray=[];
+            let responseJson = JSON.parse(response._bodyInit);
+            for(var i in responseJson.result){
+                commentArray.push({
+                    username: responseJson.result[i].username,
+                    comment: responseJson.result[i].commentString
+                })
+            }
+            let tempArray = this.state.dataSourceClean
+            for(var i in tempArray){
+                if(tempArray[i].id == value){
+                    tempArray[i].comments = commentArray
+                }
+            }
+            this.setState({
+                dataSource: ds.cloneWithRows(tempArray),
+                dataSourceClean: tempArray,
+            })
+        })
+    }
+
     getFeed(){
-        this.setState({ dataSource: ds.cloneWithRows([]), dataSourceClean: [], loadingData: true }) //reset datastore
         fetch(`${APIURL3}/fetchfeeds?username=${this.state.username}`, {
                 method: 'GET',
                 headers: HEADERPARAM3
@@ -64,8 +132,8 @@ export default class Team extends Component {
                         this.setState({
                             dataSource: ds.cloneWithRows(tempArray),
                             dataSourceClean: tempArray,
-                            ['comment'+responseJson.result[i].id]: ''
                         })
+                        this.getComment(responseJson.result[i].id)
                     }
                     if (responseJson.result[i].lunch) {
                         let tempArray = this.state.dataSourceClean
@@ -80,8 +148,8 @@ export default class Team extends Component {
                         this.setState({
                             dataSource: ds.cloneWithRows(tempArray),
                             dataSourceClean: tempArray,
-                            ['comment'+responseJson.result[i].id]: ''
                         })
+                        this.getComment(responseJson.result[i].id)
                     }
                     if (responseJson.result[i].dinner) {
                         let tempArray = this.state.dataSourceClean
@@ -96,12 +164,13 @@ export default class Team extends Component {
                         this.setState({
                             dataSource: ds.cloneWithRows(tempArray),
                             dataSourceClean: tempArray,
-                            ['comment'+responseJson.result[i].id]: ''
                         })
+                        this.getComment(responseJson.result[i].id)
                     }
                     if(i == responseJson.result.length-1){
                         this.setState({
-                            loading: false
+                            loading: false,
+                            refreshing: false
                         })
                     }
                 }
@@ -113,65 +182,8 @@ export default class Team extends Component {
     }
 
     _renderRow(value){
-        let tempWidth = window.width / 2.13
-        if(value.data.length == 1){
-            tempWidth = window.width*0.970
-        }
-        var Images =  value.data.map((b,i) => {
-            let source = { uri: BUCKETIMAGES+'/'+b.image_filename}
-            return (
-                <TouchableOpacity key={i} style={styles.cardImage}>
-                    {b.profile_picture &&
-                    <View style={{zIndex: 4, width:31,height:31,borderWidth:1,borderColor:"#ccc",borderRadius:20, position: "absolute", right: -6, top: -6}}>
-                        <CacheableImage style={{width:30,height:30,borderWidth:3,borderColor:"white",borderRadius:15,position: "absolute", right: 0, top: 0}} source={{uri: BUCKETIMAGES+'/'+b.profile_picture}}/>
-                    </View>
-                    }
-                    <CacheableImage source={source} style={{height: 150, width: tempWidth}}/>
-                </TouchableOpacity>
-            )
-        });
         return(
-                <View key={value.id} style={styles.statusContainer}>
-                     <View style={[styles.statusHeader,{height: 50, alignItems: "center"}]}>
-                        <View style={{flex:0.85}}>
-                                <View style={{flexDirection: "row"}}> 
-                                    <Text style={{color: "#666666", fontWeight: "bold", fontSize: 18, paddingLeft: 20}}>Team {value.type}</Text>
-                                </View>
-                                <Text style={{color: "grey", fontSize: 15, paddingLeft: 20, paddingRight: 20}}>{value.date}</Text>
-                        </View>
-                        <View style={{flex:0.15,height: 20, justifyContent: "center",width: 30}}>
-                                <Icon name="ios-more" type="ionicon" size={40} color="#a9a9a9" />
-                        </View>
-                    </View>
-                    <View style={{flexDirection: "row", flexWrap: "wrap"}}>
-                        { Images }
-                    </View>
-                    <View style={{zIndex: 10}}>
-
-                    </View>
-                    <View style={[styles.commentHeader,{height: 30,flex:0.8, zIndex: 5}]}>
-                        <View style={{height: 30, width: 40}}>
-                                <Icon name="ios-chatboxes-outline" type="ionicon" size={30} color="grey" />
-                        </View>
-                        <View style={{flex:0.9}}>
-                                <TextInput
-                                    style={styles.commentInput}
-                                    placeholder="Say something..."
-                                    placeholderTextColor="gray"
-                                    underlineColorAndroid="transparent"
-                                    multiline={true}
-                                    blurOnSubmit={true}
-                                    value={this.state['comment'+value.id]}
-                                    onChangeText={(commentInput) => {this.setState({["comment"+value.id]: commentInput})}}
-                                />
-                        </View>
-                        <View style={{justifyContent: "center", marginRight: 20}}>
-                            <TouchableOpacity onPress={() => {this.setState({commentID: value.id}, this.addComment)}}>
-                                <Icon name="md-send" type="ionicon" size={25} color="#CCC" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>    
-                </View>
+            <Cards key={value.id} data={value} addComment={this.addComment.bind(this)}/>
         )
     }
 
@@ -191,16 +203,16 @@ export default class Team extends Component {
                 }
                 {!this.state.loading &&
                 <ListView
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={this.state.refreshing}
-                                onRefresh={this._onRefresh.bind(this)}
-                            />
-                        }
-                        dataSource = {this.state.dataSource}
-                        renderRow  = {this._renderRow.bind(this)}
-                        initialListSize={10}
-                        enableEmptySections={true}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                        />
+                    }
+                    dataSource = {this.state.dataSource}
+                    renderRow  = {this._renderRow.bind(this)}
+                    initialListSize={10}
+                    enableEmptySections={true}
                 />}
             </View>
         )
@@ -212,6 +224,19 @@ var window = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  keyboardInput:{
+    position: "absolute",
+    backgroundColor: "white",
+    width: window.width,
+    height: 40,
+    shadowColor: 'gray',
+    shadowOffset: {
+    width: 2,
+    height: 1
+    },
+    shadowRadius: 4,
+    shadowOpacity: 0.3
   },
   statusBar:{
     height: 20,

@@ -214,17 +214,18 @@ export default class Team extends Component {
                 }
                 <View style={styles.topPosting}>
                     <View style={{alignItems: "center",justifyContent: "center"}}>
-                        <Image style={{height: 50, width: 50, borderRadius: 25, marginLeft: 10}} source={{uri: BUCKETIMAGES+'/'+this.props.screenProps.profileImage}}/>
+                        <Image style={{height: 35, width: 35, borderRadius: 17, marginLeft: 10}} source={{uri: BUCKETIMAGES+'/'+this.props.screenProps.profileImage}}/>
                     </View>
                     <View>
                         <TextInput
                             placeholder="What are you up to?"
                             placeholderTextColor="gray"
-                            style={{marginLeft: 10, height: 40, width: window.width*0.6, marginTop: 15, fontSize: 14}}
+                            underlineColorAndroid="transparent"
+                            style={{marginLeft: 10, height: 40, width: window.width*0.6, marginTop: 8, fontSize: 14}}
                         />
                     </View>
                     <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center', marginRight: 20}}>
-                        <Icon name="ios-attach-outline" size={40} color="gray" type="ionicon" />
+                        <Icon name="ios-attach-outline" size={30} color="gray" type="ionicon" />
                     </View>
                 </View>
                 {this.state.loading &&
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
   },
   topPosting:{
     backgroundColor: "white",
-    height: 70,
+    height: 55,
     marginBottom: 15,
     shadowColor: 'gray',
     shadowOffset: {

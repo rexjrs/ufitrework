@@ -85,9 +85,24 @@ export default class Logging extends Component {
 
     selectImage(type){
         this.setState({
-            visibleCamera: true,
             focusType: type
         })
+        if(Platform.OS === "ios"){
+            this.setState({
+                visibleCamera: true
+            })
+        }else{
+            Alert.alert(
+                'Image',
+                'How would you like us to fetch your image?',
+                [
+                    {text: 'Cancel', onPress: () => console.log('cancel')},
+                    {text: 'Camera', onPress: () => this.openCamera()},
+                    {text: 'Gallery', onPress: () => this.openGallery()},
+                ]
+            )
+        }
+
     }
 
     openGallery(){

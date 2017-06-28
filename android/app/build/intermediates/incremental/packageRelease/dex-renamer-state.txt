@@ -1,4 +1,4 @@
-#Wed Jun 28 10:24:17 ICT 2017
+#Wed Jun 28 17:08:07 ICT 2017
 base.0=/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/transforms/dex/release/folders/1000/1f/main
 renamed.0=classes.dex
 file.0=/Users/irexjr/Projects/ufitrework/android/app/build/intermediates/transforms/dex/release/folders/1000/1f/main/classes.dex

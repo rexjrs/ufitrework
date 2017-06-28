@@ -26,8 +26,8 @@ class Index extends Component {
             needChallenge: null,
             products: [],
             loaded: false,
-            visible: true,
-            imageSource: null
+            visible: false,
+            imageSource: "http://s3-us-west-1.amazonaws.com/unicityfit-life-bucket/Images/2017061815314500000719.jpg"
         };
     }
 
@@ -175,7 +175,7 @@ class Index extends Component {
                         login: this.loggedIn.bind(this)
                     }}/>
                 }
-                <Modal visible={this.state.visible} transparent={true}>
+                <Modal visible={this.state.visible} transparent={true} onRequestClose={()=>console.log('hi')}>
                     <ImageViewer
                         imageUrls={[{url: this.state.imageSource}]}
                         onCancel={()=>this.setState({visible: false})}
